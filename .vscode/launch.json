@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-DishNowApplication<dishNow>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.dishNow.dishNow.DishNowApplication",
+      "projectName": "dishNow",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
