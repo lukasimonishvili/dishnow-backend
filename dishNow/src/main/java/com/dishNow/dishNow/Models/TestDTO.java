@@ -1,4 +1,4 @@
-package com.dishNow.dishNow.Controllers;
+package com.dishNow.dishNow.Models;
 
 public class TestDTO {
     public String name;
