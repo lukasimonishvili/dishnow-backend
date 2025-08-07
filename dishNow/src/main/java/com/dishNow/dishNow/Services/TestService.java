@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dishNow.dishNow.Controllers.TestDTO;
+import com.dishNow.dishNow.Models.TestDTO;
 import com.dishNow.dishNow.Models.TestModel;
 import com.dishNow.dishNow.Repositories.TestRepository;
 
