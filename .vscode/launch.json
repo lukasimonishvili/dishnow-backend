@@ -8,7 +8,11 @@
       "mainClass": "com.dishNow.dishNow.DishNowApplication",
       "projectName": "dishNow",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "DB_USERNAME": "root",
+        "DB_PASSWORD": "1998"
+      }
     }
   ]
 }

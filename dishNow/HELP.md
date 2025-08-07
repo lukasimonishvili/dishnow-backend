@@ -19,5 +19,10 @@ You can access swagger in this link
 http://localhost:8080/swagger-ui/index.html
 
 System uses SQL connection password to connect to DB. it might be different for you. you set it during installing MySQL workbanch
-remember this password and make changes in this file ./src/main/resources/application.properties
-in this file (line 5) spring.datasource.password=1998 change 1998 to your password
+remember this password and make changes in this file .vscode/launch.json
+
+add this to config
+"env": {
+"DB_USERNAME": "root",
+"DB_PASSWORD": "1998"
+}
