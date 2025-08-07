@@ -18,6 +18,7 @@ public class User {
     private String role = "user";
     private boolean verified = false;
 
+    // Default constructor for JPA
     public User() {}
 
     public User(String name, String lastName, LocalDate birthday, String email, String passwordHash) {
