@@ -1,8 +1,7 @@
 package com.dishNow.dishNow.Repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.dishNow.dishNow.Models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 }
