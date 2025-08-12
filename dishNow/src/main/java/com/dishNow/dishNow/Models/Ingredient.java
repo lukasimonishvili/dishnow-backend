@@ -21,7 +21,7 @@ public class Ingredient {
         this.nameES = nameES;
         this.nameCN = nameCN;
     }
-    
+
     public String getNameEN() {
         return nameEN;
     }
@@ -41,7 +41,5 @@ public class Ingredient {
         this.nameCN = nameCN;
     }
 
-
-    
 
 }
