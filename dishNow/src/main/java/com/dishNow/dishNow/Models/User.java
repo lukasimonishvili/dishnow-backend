@@ -18,7 +18,7 @@ public class User {
     private String passwordHash;
     private UserEnums.USER_ROLE role = UserEnums.USER_ROLE.USER;
     private boolean verified = false;
-    private Recipe[] favoriteRecipes;
+    private Long[] favoriteRecipesID;
 
     // Default constructor for JPA
     public User() {}
@@ -98,10 +98,10 @@ public class User {
         this.verified = verified;
     }
 
-    public void setFavoriteRecipes(Recipe[] favorites){
-        this.favoriteRecipes = favorites;
+    public void setfavoriteRecipesID(Long[] favorites){
+        this.favoriteRecipesID = favorites;
     }
-    public Recipe[] getFavoriteRecipes(){
-        return this.favoriteRecipes;
+    public Long[] getfavoriteRecipesID(){
+        return this.favoriteRecipesID;
     }
 }

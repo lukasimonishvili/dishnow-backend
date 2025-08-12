@@ -17,32 +17,34 @@ public class Recipe {
 
     private String nameEN;
     private String nameES;
-    private String nameCN;
+    private String nameCA;
     private String descriptionEN;
     private String descriptionES;
-    private String descriptionCN;
+    private String descriptionCA;
     private Long[] igredientsID;
     private Long[] categoriesID;
     private int amountLikes;
     private Long userID;
     private RECIPE_ENUMS.STATUS status;
-    private String[] phtos;
+    private String[] photos;
 
-    public Recipe(String nameEN, String nameES, String nameCN, String descriptionEN, String descriptionES,
-            String descriptionCN, Long[] igredientsID, Long[] categoriesID, int amountLikes, Long userID, STATUS status,
-            String[] phtos) {
+    // Default constructor for JPA
+    public Recipe() {}
+    public Recipe(String nameEN, String nameES, String nameCA, String descriptionEN, String descriptionES,
+            String descriptionCA, Long[] igredientsID, Long[] categoriesID, int amountLikes, Long userID, STATUS status,
+            String[] photos) {
         this.nameEN = nameEN;
         this.nameES = nameES;
-        this.nameCN = nameCN;
+        this.nameCA = nameCA;
         this.descriptionEN = descriptionEN;
         this.descriptionES = descriptionES;
-        this.descriptionCN = descriptionCN;
+        this.descriptionCA = descriptionCA;
         this.igredientsID = igredientsID;
         this.categoriesID = categoriesID;
         this.amountLikes = amountLikes;
         this.userID = userID;
         this.status = status;
-        this.phtos = phtos;
+        this.photos = photos;
     }
 
     public String getNameEN() {
@@ -61,12 +63,12 @@ public class Recipe {
         this.nameES = nameES;
     }
 
-    public String getNameCN() {
-        return nameCN;
+    public String getNameCA() {
+        return nameCA;
     }
 
-    public void setNameCN(String nameCN) {
-        this.nameCN = nameCN;
+    public void setNameCA(String nameCA) {
+        this.nameCA = nameCA;
     }
 
     public String getDescriptionEN() {
@@ -85,12 +87,12 @@ public class Recipe {
         this.descriptionES = descriptionES;
     }
 
-    public String getDescriptionCN() {
-        return descriptionCN;
+    public String getDescriptionCA() {
+        return descriptionCA;
     }
 
-    public void setDescriptionCN(String descriptionCN) {
-        this.descriptionCN = descriptionCN;
+    public void setDescriptionCA(String descriptionCA) {
+        this.descriptionCA = descriptionCA;
     }
 
     public Long[] getIgredientsID() {
@@ -133,12 +135,12 @@ public class Recipe {
         this.status = status;
     }
 
-    public String[] getPhtos() {
-        return phtos;
+    public String[] getPhotos() {
+        return photos;
     }
 
-    public void setPhtos(String[] phtos) {
-        this.phtos = phtos;
+    public void setPhotos(String[] photos) {
+        this.photos = photos;
     }
 
     

@@ -15,7 +15,8 @@ public class Ingredient {
     private String nameEN;
     private String nameES;
     private String nameCN;
-    
+    // Default constructor for JPA
+    public Ingredient() {}
     public Ingredient(String nameEN, String nameES, String nameCN) {
         this.nameEN = nameEN;
         this.nameES = nameES;
