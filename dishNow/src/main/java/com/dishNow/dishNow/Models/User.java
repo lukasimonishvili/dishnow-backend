@@ -2,6 +2,7 @@ package com.dishNow.dishNow.Models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import com.dishNow.dishNow.Enums.UserEnums;
 
 @Entity
 public class User {
@@ -15,19 +16,21 @@ public class User {
     private LocalDate birthday;
     private String email;
     private String passwordHash;
-    private String role = "user";
+    private UserEnums.USER_ROLE role = UserEnums.USER_ROLE.USER;
     private boolean verified = false;
+    private Recipe[] favoriteRecipes;
 
     // Default constructor for JPA
     public User() {}
 
-    public User(String name, String lastName, LocalDate birthday, String email, String passwordHash) {
+    public User(String name, String lastName, LocalDate birthday,
+        String email, String passwordHash, UserEnums.USER_ROLE role) {
         this.name = name;
         this.lastName = lastName;
         this.birthday = birthday;
         this.email = email;
         this.passwordHash = passwordHash;
-        this.role = "user";
+        this.role = role;
         this.verified = false;
     }
 
@@ -79,11 +82,11 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
-    public String getRole() {
+    public UserEnums.USER_ROLE getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserEnums.USER_ROLE role) {
         this.role = role;
     }
 
@@ -93,5 +96,12 @@ public class User {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public void setFavoriteRecipes(Recipe[] favorites){
+        this.favoriteRecipes = favorites;
+    }
+    public Recipe[] getFavoriteRecipes(){
+        return this.favoriteRecipes;
     }
 }
