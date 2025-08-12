@@ -26,7 +26,7 @@ public class RecipeDTO {
     private String descriptionCA;
 
     @NotEmpty(message = "Ingredients are required")
-    private List<@NotNull Long> igredientsID;
+    private List<@NotNull Long> ingredientsID;
 
     @NotEmpty(message = "Categories are required")
     private List<@NotNull Long> categoriesID;
@@ -48,7 +48,7 @@ public class RecipeDTO {
             @NotBlank(message = "Description (EN) is required") String descriptionEN,
             @NotBlank(message = "Description (ES) is required") String descriptionES,
             @NotBlank(message = "Description (CN) is required") String descriptionCA,
-            @NotEmpty(message = "Ingredients are required") List<@NotNull Long> igredientsID,
+            @NotEmpty(message = "Ingredients are required") List<@NotNull Long> ingredientsID,
             @NotEmpty(message = "Categories are required") List<@NotNull Long> categoriesID,
             @Min(value = 0, message = "Amount of likes cannot be negative") int amountLikes,
             @NotNull(message = "User ID is required") Long userID, RECIPE_ENUMS.STATUS status,
@@ -59,7 +59,7 @@ public class RecipeDTO {
         this.descriptionEN = descriptionEN;
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
-        this.igredientsID = igredientsID;
+        this.ingredientsID = ingredientsID;
         this.categoriesID = categoriesID;
         this.amountLikes = amountLikes;
         this.userID = userID;
@@ -115,12 +115,12 @@ public class RecipeDTO {
         this.descriptionCA = descriptionCN;
     }
 
-    public List<Long> getIgredientsID() {
-        return igredientsID;
+    public List<Long> getingredientsID() {
+        return ingredientsID;
     }
 
-    public void setIgredientsID(List<Long> igredientsID) {
-        this.igredientsID = igredientsID;
+    public void setingredientsID(List<Long> ingredientsID) {
+        this.ingredientsID = ingredientsID;
     }
 
     public List<Long> getCategoriesID() {

@@ -14,13 +14,21 @@ public class Ingredient {
 
     private String nameEN;
     private String nameES;
-    private String nameCN;
+    private String nameCA;
     // Default constructor for JPA
     public Ingredient() {}
-    public Ingredient(String nameEN, String nameES, String nameCN) {
+    
+    public Ingredient(Long id, String nameEN, String nameES, String nameCA) {
+        this.id = id;
         this.nameEN = nameEN;
         this.nameES = nameES;
-        this.nameCN = nameCN;
+        this.nameCA = nameCA;
+    }
+
+    public Ingredient(String nameEN, String nameES, String nameCA) {
+        this.nameEN = nameEN;
+        this.nameES = nameES;
+        this.nameCA = nameCA;
     }
 
     public String getNameEN() {
@@ -35,11 +43,19 @@ public class Ingredient {
     public void setNameES(String nameES) {
         this.nameES = nameES;
     }
-    public String getNameCN() {
-        return nameCN;
+    public String getNameCA() {
+        return nameCA;
     }
-    public void setNameCN(String nameCN) {
-        this.nameCN = nameCN;
+    public void setNameCA(String nameCN) {
+        this.nameCA = nameCN;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 
