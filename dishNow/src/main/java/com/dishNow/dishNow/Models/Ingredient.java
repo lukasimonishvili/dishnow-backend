@@ -16,6 +16,12 @@ public class Ingredient {
     private String nameES;
     private String nameCN;
     
+    public Ingredient(String nameEN, String nameES, String nameCN) {
+        this.nameEN = nameEN;
+        this.nameES = nameES;
+        this.nameCN = nameCN;
+    }
+    
     public String getNameEN() {
         return nameEN;
     }
