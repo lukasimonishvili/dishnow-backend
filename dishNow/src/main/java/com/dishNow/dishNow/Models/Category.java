@@ -41,15 +41,6 @@ public class Category {
     public String getNameCA() {
         return nameCA;
     }
-    public void setNameCA(String nameCA) {
-        this.nameCA = nameCA;
-    }
-
-   
-
-    public void setNameES(String nameES) {
-        this.nameES = nameES;
-    }
 
     public void setNameCA(String nameCA) {
         this.nameCA = nameCA;
