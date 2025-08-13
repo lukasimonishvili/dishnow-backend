@@ -120,11 +120,11 @@ public class RecipeGetDTO {
         this.descriptionCA = descriptionCA;
     }
 
-    public List<Ingredient> getingredientsID() {
+    public List<Ingredient> getIngredientsID() {
         return ingredientsID;
     }
 
-    public void setingredientsID(List<Ingredient> ingredientsID) {
+    public void setIngredientsID(List<Ingredient> ingredientsID) {
         this.ingredientsID = ingredientsID;
     }
 

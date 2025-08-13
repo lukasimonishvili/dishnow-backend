@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dishNow.dishNow.Models.Category;
+import com.dishNow.dishNow.Models.CategoryAddDTO;
 import com.dishNow.dishNow.Models.CategoryDTO;
 import com.dishNow.dishNow.Repositories.CategoryRepository;
 
@@ -14,8 +15,10 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public void add(CategoryDTO categoryDTO) {
-        categoryRepository.save(convertToEntity(categoryDTO));
+    public CategoryDTO add(CategoryAddDTO categoryDTO) {
+        Category cat = convertToEntity(categoryDTO);
+        categoryRepository.save(cat);
+        return convertToGetDTO(cat);
     }
 
     public void remove(Long id) {
@@ -31,10 +34,10 @@ public class CategoryService {
     }
 
     public CategoryDTO getByIdDTO(Long id) {
-        return convertToEntity(getById(id));
+        return convertToGetDTO(getById(id));
     }
 
-    public CategoryDTO convertToEntity(Category category) {
+    public CategoryDTO convertToGetDTO(Category category) {
         CategoryDTO dto = new CategoryDTO(
                 category.getId(),
                 category.getNameEN(),
@@ -43,7 +46,7 @@ public class CategoryService {
         return dto;
     }
 
-    public Category convertToEntity(CategoryDTO dto) {
+    public Category convertToEntity(CategoryAddDTO dto) {
         Category category = new Category(
                 dto.getNameEN(),
                 dto.getNameES(),
@@ -51,7 +54,7 @@ public class CategoryService {
         return category;
     }
 
-    public void update(Long id, CategoryDTO categoryDTO) {
+    public CategoryDTO update(Long id, CategoryAddDTO categoryDTO) {
         Category category = getById(id);
         if (categoryDTO.getNameEN() != null)
             category.setNameEN(categoryDTO.getNameEN());
@@ -60,6 +63,7 @@ public class CategoryService {
         if (categoryDTO.getNameCA() != null)
             category.setNameCA(categoryDTO.getNameCA());
         categoryRepository.save(category); // this performs update
+        return convertToGetDTO(category);
     }
 
 }

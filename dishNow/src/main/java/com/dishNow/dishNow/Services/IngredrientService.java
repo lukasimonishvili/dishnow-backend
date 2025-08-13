@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dishNow.dishNow.Models.Ingredient;
+import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Repositories.IngredientRepository;
 
@@ -14,11 +15,12 @@ public class IngredrientService {
     @Autowired
     private IngredientRepository ingredienteRepository;
 
-    public void add(IngredientDTO ingredientDTO) {
-        ingredienteRepository.save(convertToEntity(ingredientDTO));
+    public IngredientDTO add(IngredientAddDTO ingredientDTO) {
+        Ingredient ingre = ingredienteRepository.save(convertToEntity(ingredientDTO));
+        return convertToGetDTO(ingre);
     }
 
-    public Ingredient convertToEntity(IngredientDTO dto) {
+    public Ingredient convertToEntity(IngredientAddDTO dto) {
         Ingredient ingredient = new Ingredient(
                 dto.getNameEN(),
                 dto.getNameES(),
@@ -38,7 +40,7 @@ public class IngredrientService {
                 .orElseThrow(() -> new EntityNotFoundException("Ingedient with ID " + id + " not found"));
     }
 
-    public void update(Long id, IngredientDTO ingredientDTO) {
+    public IngredientDTO update(Long id, IngredientDTO ingredientDTO) {
         Ingredient ingredient = getById(id);
         if (ingredientDTO.getNameEN() != null)
             ingredient.setNameEN(ingredientDTO.getNameEN());
@@ -47,5 +49,19 @@ public class IngredrientService {
         if (ingredientDTO.getNameCA() != null)
             ingredient.setNameCA(ingredientDTO.getNameCA());
         ingredienteRepository.save(ingredient); // this performs update
+        return convertToGetDTO(ingredient);
+    }
+
+    public IngredientDTO getByIdDTO(Long id) {
+        return convertToGetDTO(getById(id));
+    }
+
+    public IngredientDTO convertToGetDTO(Ingredient ingredient) {
+        IngredientDTO dto = new IngredientDTO(
+                ingredient.getId(),
+                ingredient.getNameEN(),
+                ingredient.getNameES(),
+                ingredient.getNameCA());
+        return dto;
     }
 }

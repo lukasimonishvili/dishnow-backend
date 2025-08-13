@@ -1,51 +1,47 @@
 package com.dishNow.dishNow.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class IngredientAddDTO {
+    @NotBlank(message = "Name (EN) is required")
     private String nameEN;
+
+    @NotBlank(message = "Name (ES) is required")
     private String nameES;
+
+    @NotBlank(message = "Name (CN) is required")
     private String nameCA;
-    
-    public Category(){}
-    public Category(String nameEN, String nameES, String nameCA) {
+
+    public IngredientAddDTO() {}
+
+    public IngredientAddDTO(Long id, String nameEN, String nameES, String nameCA) {
         this.nameEN = nameEN;
         this.nameES = nameES;
         this.nameCA = nameCA;
     }
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public String getNameEN() {
         return nameEN;
     }
+
     public void setNameEN(String nameEN) {
         this.nameEN = nameEN;
     }
+
     public String getNameES() {
         return nameES;
     }
+
     public void setNameES(String nameES) {
         this.nameES = nameES;
     }
+
     public String getNameCA() {
         return nameCA;
     }
+
     public void setNameCA(String nameCA) {
         this.nameCA = nameCA;
     }
-
-   
-
 }
+

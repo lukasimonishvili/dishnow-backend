@@ -5,10 +5,14 @@ import java.util.List;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Recipe {
@@ -23,17 +27,29 @@ public class Recipe {
     private String descriptionEN;
     private String descriptionES;
     private String descriptionCA;
+    @ElementCollection
+    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "ingredient_id")
     private List<Long> ingredientsID;
+    @ElementCollection
+    @CollectionTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "category_id")
     private List<Long> categoriesID;
     private Long userID;
     private int amountLikes;
     private RECIPE_ENUMS.STATUS status;
+    @ElementCollection
+    @CollectionTable(name = "recipe_photos", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "photo_url")
     private List<String> photos;
 
     // Default constructor for JPA
-    public Recipe() {}
+    public Recipe() {
+    }
+
     public Recipe(String nameEN, String nameES, String nameCA, String descriptionEN, String descriptionES,
-            String descriptionCA, List<Long> ingredientsID, List<Long> categoriesID, int amountLikes, Long userID, STATUS status,
+            String descriptionCA, List<Long> ingredientsID, List<Long> categoriesID, int amountLikes, Long userID,
+            STATUS status,
             List<String> photos) {
         this.nameEN = nameEN;
         this.nameES = nameES;
@@ -97,11 +113,11 @@ public class Recipe {
         this.descriptionCA = descriptionCA;
     }
 
-    public List<Long> getingredientsID() {
+    public List<Long> getIngredientsID() {
         return ingredientsID;
     }
 
-    public void setingredientsID(List<Long> ingredientsID) {
+    public void setIngredientsID(List<Long> ingredientsID) {
         this.ingredientsID = ingredientsID;
     }
 
@@ -152,8 +168,5 @@ public class Recipe {
     public void setId(Long id) {
         this.id = id;
     }
-
-    
-    
 
 }

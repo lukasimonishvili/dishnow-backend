@@ -2,6 +2,7 @@ package com.dishNow.dishNow.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,13 @@ public class RecipeService {
     @Autowired
     private IngredrientService ingredientService;
 
-    public void add(RecipeDTO recipeDTO) {
+    public RecipeGetDTO add(RecipeDTO recipeDTO) {
         Recipe recipe = convertToEntity(recipeDTO);
         recipeRepository.save(recipe);
+        return convertToGetDTO(recipe);
     }
 
-    public void update(Long id, RecipeDTO recipeDTO) {
+    public RecipeGetDTO update(Long id, RecipeDTO recipeDTO) {
         Recipe recipe = getByID(id);
 
         if (recipeDTO.getNameEN() != null)
@@ -47,8 +49,8 @@ public class RecipeService {
         if (recipeDTO.getDescriptionCA() != null)
             recipe.setDescriptionCA(recipeDTO.getDescriptionCA());
 
-        if (recipeDTO.getingredientsID() != null)
-            recipe.setingredientsID(recipeDTO.getingredientsID());
+        if (recipeDTO.getIngredientsID() != null)
+            recipe.setIngredientsID(recipeDTO.getIngredientsID());
 
         if (recipeDTO.getCategoriesID() != null)
             recipe.setCategoriesID(recipeDTO.getCategoriesID());
@@ -66,6 +68,7 @@ public class RecipeService {
             recipe.setPhotos(recipeDTO.getPhotos());
 
         recipeRepository.save(recipe); // this performs update
+        return convertToGetDTO(recipe);
     }
 
     public void remove(Long id) {
@@ -83,12 +86,12 @@ public class RecipeService {
                 dto.getDescriptionEN(),
                 dto.getDescriptionES(),
                 dto.getDescriptionCA(),
-                dto.getingredientsID(),
+                dto.getIngredientsID(),
                 dto.getCategoriesID(),
                 dto.getAmountLikes(),
                 dto.getUserID(),
                 dto.getStatus(),
-                dto.getPhotos() != null ? dto.getPhotos() : new ArrayList<>() );
+                dto.getPhotos() != null ? dto.getPhotos() : new ArrayList<>());
         return recipe;
     }
 
@@ -102,23 +105,23 @@ public class RecipeService {
                 recipe.getDescriptionES(),
                 recipe.getDescriptionCA(),
                 getIngredientList(recipe),
-                getCaregoryList(recipe), // ID IGUAL
+                getCaregoryList(recipe),
                 recipe.getAmountLikes(),
                 recipe.getStatus(),
                 recipe.getPhotos());
     }
 
-    public List<Category> getCaregoryList(Recipe recipe){
+    public List<Category> getCaregoryList(Recipe recipe) {
         List<Category> listCategories = new ArrayList<>();
-        for (Long id : recipe.getCategoriesID() ) {
+        for (Long id : recipeRepository.findCategoriesByRecipeId(recipe.getId()) ) {
             listCategories.add(categoryService.getById(id));
         }
         return listCategories;
     }
 
-    public List<Ingredient> getIngredientList(Recipe recipe){
+    public List<Ingredient> getIngredientList(Recipe recipe) {
         List<Ingredient> listIngredients = new ArrayList<>();
-        for (Long id : recipe.getingredientsID() ) {
+        for (Long id : recipeRepository.findIngredientsByRecipeId(recipe.getId()) ) {
             listIngredients.add(ingredientService.getById(id));
         }
         return listIngredients;
@@ -132,5 +135,5 @@ public class RecipeService {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found"));
     }
-
+    
 }

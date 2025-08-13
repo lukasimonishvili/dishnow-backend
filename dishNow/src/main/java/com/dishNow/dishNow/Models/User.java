@@ -2,6 +2,8 @@ package com.dishNow.dishNow.Models;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+
 import com.dishNow.dishNow.Enums.UserEnums;
 
 @Entity
@@ -18,7 +20,7 @@ public class User {
     private String passwordHash;
     private UserEnums.USER_ROLE role = UserEnums.USER_ROLE.USER;
     private boolean verified = false;
-    private Long[] favoriteRecipesID;
+    private List<Long> favoriteRecipesID;
 
     // Default constructor for JPA
     public User() {}
@@ -98,10 +100,10 @@ public class User {
         this.verified = verified;
     }
 
-    public void setfavoriteRecipesID(Long[] favorites){
+    public void setfavoriteRecipesID(List<Long> favorites){
         this.favoriteRecipesID = favorites;
     }
-    public Long[] getfavoriteRecipesID(){
+    public List<Long> getfavoriteRecipesID(){
         return this.favoriteRecipesID;
     }
 }
