@@ -1,56 +1,56 @@
 package com.dishNow.dishNow.Models;
 
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
-import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+public class RecipeGetDTO {
 
-@Entity
-public class Recipe {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotBlank(message = "Name (EN) is required")
     private String nameEN;
+
+    @NotBlank(message = "Name (ES) is required")
     private String nameES;
+
+    @NotBlank(message = "Name (CN) is required")
     private String nameCA;
+
+    @NotBlank(message = "Description (EN) is required")
     private String descriptionEN;
+
+    @NotBlank(message = "Description (ES) is required")
     private String descriptionES;
+
+    @NotBlank(message = "Description (CN) is required")
     private String descriptionCA;
-    @ElementCollection
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "ingredient_id")
-    private List<Long> ingredientsID;
-    @ElementCollection
-    @CollectionTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "category_id")
-    private List<Long> categoriesID;
-    private Long userID;
-    private int amountLikes;
+
+    @NotEmpty(message = "Ingredients are required")
+    private List<@NotNull Ingredient> ingredientsID;
+
+    @NotEmpty(message = "Categories are required")
+    private List<@NotNull Category> categoriesID;
+
+    @Min(value = 0, message = "Amount of likes cannot be negative")
+    private Integer amountLikes;
+
+    @NotNull(message = "Status is required")
     private RECIPE_ENUMS.STATUS status;
-    @ElementCollection
-    @CollectionTable(name = "recipe_photos", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "photo_url")
-    private List<String> photos;
 
-    // Default constructor for JPA
-    public Recipe() {
-    }
+    private List<@NotBlank String> photos;
 
-    public Recipe(String nameEN, String nameES, String nameCA, String descriptionEN, String descriptionES,
-            String descriptionCA, List<Long> ingredientsID, List<Long> categoriesID, int amountLikes, Long userID,
-            STATUS status,
-            List<String> photos) {
+    public RecipeGetDTO(Long id, @NotBlank(message = "Name (EN) is required") String nameEN,
+            @NotBlank(message = "Name (ES) is required") String nameES,
+            @NotBlank(message = "Name (CN) is required") String nameCA,
+            @NotBlank(message = "Description (EN) is required") String descriptionEN,
+            @NotBlank(message = "Description (ES) is required") String descriptionES,
+            @NotBlank(message = "Description (CN) is required") String descriptionCA,
+            @NotEmpty(message = "Ingredients are required") List<@NotNull Ingredient> ingredientsID,
+            @NotEmpty(message = "Categories are required") List<@NotNull Category> categoriesID,
+            @Min(value = 0, message = "Amount of likes cannot be negative") Integer amountLikes,
+            RECIPE_ENUMS.STATUS status, List<@NotBlank String> photos) {
+        this.id = id;
         this.nameEN = nameEN;
         this.nameES = nameES;
         this.nameCA = nameCA;
@@ -60,9 +60,16 @@ public class Recipe {
         this.ingredientsID = ingredientsID;
         this.categoriesID = categoriesID;
         this.amountLikes = amountLikes;
-        this.userID = userID;
         this.status = status;
         this.photos = photos;
+    }
+
+    public Long getID() {
+        return id;
+    }
+
+    public void setID(Long id) {
+        this.id = id;
     }
 
     public String getNameEN() {
@@ -113,36 +120,28 @@ public class Recipe {
         this.descriptionCA = descriptionCA;
     }
 
-    public List<Long> getIngredientsID() {
+    public List<Ingredient> getIngredientsID() {
         return ingredientsID;
     }
 
-    public void setIngredientsID(List<Long> ingredientsID) {
+    public void setIngredientsID(List<Ingredient> ingredientsID) {
         this.ingredientsID = ingredientsID;
     }
 
-    public List<Long> getCategoriesID() {
+    public List<Category> getCategoriesID() {
         return categoriesID;
     }
 
-    public void setCategoriesID(List<Long> categoriesID) {
+    public void setCategoriesID(List<Category> categoriesID) {
         this.categoriesID = categoriesID;
     }
 
-    public int getAmountLikes() {
+    public Integer getAmountLikes() {
         return amountLikes;
     }
 
-    public void setAmountLikes(int amountLikes) {
+    public void setAmountLikes(Integer amountLikes) {
         this.amountLikes = amountLikes;
-    }
-
-    public Long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(Long userID) {
-        this.userID = userID;
     }
 
     public RECIPE_ENUMS.STATUS getStatus() {
@@ -160,13 +159,4 @@ public class Recipe {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
 }
