@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
@@ -45,15 +46,12 @@ public class RecipeController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable Long id) {
-        try {
-            RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
-            return ResponseEntity.ok(recipeDTO);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Recipe not found for ID " + id);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred: " + e.getMessage());
+        RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
+        if (recipeDTO != null) {
+            return ResponseEntity.ok(recipeDTO); // Return the ingredient data
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
+                    .body("Recipe not found");
         }
     }
 
