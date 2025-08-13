@@ -46,12 +46,17 @@ public class RecipeController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable Long id) {
-        RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
-        if (recipeDTO != null) {
-            return ResponseEntity.ok(recipeDTO); // Return the ingredient data
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
-                    .body("Recipe not found");
+        try {
+            RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
+            return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
+        } catch (EntityNotFoundException e) {
+            // Si no se encuentra la receta, devolver un 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Recipe with ID " + id + " not found");
+        } catch (Exception e) {
+            // Captura cualquier otra excepción para no devolver 500
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An unexpected error occurred: " + e.getMessage());
         }
     }
 

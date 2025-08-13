@@ -132,7 +132,7 @@ public class RecipeService {
 
     public Recipe getByID(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found. Service"));
     }
     
 }

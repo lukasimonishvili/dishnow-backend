@@ -44,12 +44,17 @@ public class IngredientController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getIngredient(@PathVariable Long id) {
-        IngredientDTO ingredientDTO = ingredientService.getByIdDTO(id);
-        if (ingredientDTO != null) {
-            return ResponseEntity.ok(ingredientDTO); // Return the ingredient data
-        } else {
+        try {
+                IngredientDTO ingredientDTO = ingredientService.getByIdDTO(id);
+                if (ingredientDTO != null) {
+                    return ResponseEntity.ok(ingredientDTO); // Return the ingredient data
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
+                            .body("Ingredient not found");
+                }
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
-                    .body("Ingredient not found");
+                            .body("Ingredient not found");
         }
     }
 
