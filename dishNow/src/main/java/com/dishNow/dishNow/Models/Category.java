@@ -1,5 +1,4 @@
 package com.dishNow.dishNow.Models;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,4 +47,11 @@ public class Category {
 
    
 
+    public void setNameES(String nameES) {
+        this.nameES = nameES;
+    }
+
+    public void setNameCA(String nameCA) {
+        this.nameCA = nameCA;
+    }
 }
