@@ -3,7 +3,8 @@ package com.dishNow.dishNow.Controllers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import java.util.Optional;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
@@ -38,32 +39,20 @@ public class RecipeController {
 
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeRecipe(@PathVariable Long id) {
-        Optional<Recipe> op = recipeService.remove(id);
-        if (op.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
-                    .body("Recipe not found");
-        }
+        recipeService.remove(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDTO recipeDTO) {
-        Optional<RecipeGetDTO> op = recipeService.update(id, recipeDTO);
-        if(op.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
-                                    .body("Recipe not found");
-        }
-        return ResponseEntity.ok(op.get()); // 200 OK
+        RecipeGetDTO updatedRecipe = recipeService.update(id, recipeDTO);
+        return ResponseEntity.ok(updatedRecipe); // 200 OK
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable Long id) {
-        Optional<RecipeGetDTO> op = recipeService.getByIdDTO(id);
-        if(op.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
-                                    .body("Recipe not found");
-        }
-        return ResponseEntity.ok(op.get()); // 200 OK
+        RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
+        return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
     }
 
     @GetMapping("/pending")
@@ -84,6 +73,14 @@ public class RecipeController {
         @PathVariable Long categoryId,
         Pageable pageable) {
             Page<RecipeGetDTO> recipes = recipeService.getRecipesByCategory(categoryId, pageable);
+            return ResponseEntity.ok(recipes);
+        }
+
+    @GetMapping("/by-ingredients")
+    public ResponseEntity<Page<RecipeGetDTO>> getRecipesByUserIngredients(
+        @RequestParam List<Long> ingredients,
+        Pageable pageable) {
+            Page<RecipeGetDTO> recipes = recipeService.getRecipesByUserIngredients(ingredients, pageable);
             return ResponseEntity.ok(recipes);
         }
 }

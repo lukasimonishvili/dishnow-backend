@@ -25,6 +25,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     Page<Recipe> findByStatus(RECIPE_ENUMS.STATUS status, Pageable pageable);
     @Query("SELECT r FROM Recipe r JOIN r.categories c WHERE c.id = :categoryId")
     Page<Recipe> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
-
+    @Query("SELECT DISTINCT r FROM Recipe r JOIN r.ingredients i WHERE i.id IN :ingredientIds")
+    Page<Recipe> findRecipesWithAnyIngredient(@Param("ingredientIds") List<Long> ingredientIds, Pageable pageable);
 }
 
