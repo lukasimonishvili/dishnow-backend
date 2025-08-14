@@ -28,8 +28,12 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found. Service"));
     }
 
-    public UserDTO add(UserAddDTO userAdd) {
+    public UserDTO addByDTO(UserAddDTO userAdd) {
         User user = convertToEntity(userAdd);
+        return add(user);
+    }
+
+    public UserDTO add(User user) {
         userRepository.save(user);
         return convertToGetDTO(user);
     }

@@ -11,9 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Enums.UserEnums.USER_ROLE;
+import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Models.UserAddDTO;
 import com.dishNow.dishNow.Models.UserDTO;
+import com.dishNow.dishNow.Models.UserRegisterDTO;
 import com.dishNow.dishNow.Services.UserService;
+
+import static com.dishNow.dishNow.Utils.Validations.*;
+
+import java.util.ArrayList;
 
 import jakarta.validation.Valid;
 
@@ -24,16 +31,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO registerDTO) {
+        if (!isValidEmail(registerDTO.getEmail())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Invalid email");
+        }
+        if (!isValidPassword(registerDTO.getPassword())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Invalid password");
+        }else if (registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("The passwords do not match");
+        }
+        User user = new User(
+            registerDTO.getName(),
+            registerDTO.getLastName(),
+            registerDTO.getBirthday(),
+            registerDTO.getEmail(),
+            USER_ROLE.USER,
+            false,
+            new ArrayList<>(),
+            new ArrayList<>(),
+            "Hasehdpassword"
+        );
+        UserDTO dto = userService.add(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
+    }
 
     @PostMapping("/add")
-    public ResponseEntity<?> addCategory(@Valid @RequestBody UserAddDTO userDTO) {
-        UserDTO dto = userService.add(userDTO);
+    public ResponseEntity<?> addUser(@Valid @RequestBody UserAddDTO userAddDTO) {
+        UserDTO dto = userService.addByDTO(userAddDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
     }
 
     
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<?> removeCategory(@PathVariable Long id) {
+    public ResponseEntity<?> removeUser(@PathVariable Long id) {
         userService.remove(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
