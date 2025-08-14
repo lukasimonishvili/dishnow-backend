@@ -152,6 +152,10 @@ public class RecipeService {
         Page<Recipe> recipes = recipeRepository.findByStatus(RECIPE_ENUMS.STATUS.PENDING, pageable);
         return recipes.map(this::convertToGetDTO);
     }
-    
+
+    public Page<RecipeGetDTO> getAllRecipes(Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findAll(pageable);
+        return recipes.map(this::convertToGetDTO);
+    }    
 }
 

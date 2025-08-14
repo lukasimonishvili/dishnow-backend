@@ -56,6 +56,11 @@ public class RecipeController {
     public ResponseEntity<Page<RecipeGetDTO>> getPendingRecipes(Pageable pageable) {
         Page<RecipeGetDTO> pendingRecipes = recipeService.getPendingRecipes(pageable);
         return ResponseEntity.ok(pendingRecipes);
+    }
 
+    @GetMapping("/all")
+    public ResponseEntity<Page<RecipeGetDTO>> getAllRecipes(Pageable pageable) {
+        Page<RecipeGetDTO> recipes = recipeService.getAllRecipes(pageable);
+        return ResponseEntity.ok(recipes);
     }
 }
