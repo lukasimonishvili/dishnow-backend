@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Services.IngredrientService;
@@ -32,30 +35,32 @@ public class IngredientController {
 
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeIngredient(@PathVariable Long id) {
-        ingredientService.remove(id);
+        Optional<Ingredient> op = ingredientService.remove(id);
+        if (op.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                    .body("Ingredient not found");
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateIngredient(@PathVariable Long id, @Valid @RequestBody IngredientDTO ingredientDTO) {
-        IngredientDTO dto = ingredientService.update(id, ingredientDTO);
-        return ResponseEntity.ok(dto);
+        Optional<IngredientDTO> op = ingredientService.update(id, ingredientDTO);
+        if(op.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                                    .body("Ingredient not found");
+        }
+        return ResponseEntity.ok(op.get()); // 200 OK
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getIngredient(@PathVariable Long id) {
-        try {
-                IngredientDTO ingredientDTO = ingredientService.getByIdDTO(id);
-                if (ingredientDTO != null) {
-                    return ResponseEntity.ok(ingredientDTO); // Return the ingredient data
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
-                            .body("Ingredient not found");
-                }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if not found
-                            .body("Ingredient not found");
+        Optional<IngredientDTO> op = ingredientService.getByIdDTO(id);
+        if(op.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                                    .body("Ingredient not found");
         }
+        return ResponseEntity.ok(op.get()); // 200 OK
     }
 
 }

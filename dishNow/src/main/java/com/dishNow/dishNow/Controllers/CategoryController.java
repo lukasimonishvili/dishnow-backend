@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.CategoryAddDTO;
 import com.dishNow.dishNow.Models.CategoryDTO;
 import com.dishNow.dishNow.Services.CategoryService;
@@ -24,37 +27,40 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-
     @PostMapping("/add")
     public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryAddDTO categoryDTO) {
         CategoryDTO dto = categoryService.add(categoryDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
     }
 
-    
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeCategory(@PathVariable Long id) {
-        categoryService.remove(id);
+        Optional<Category> op = categoryService.remove(id);
+        if (op.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                    .body("Category not found");
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
-    
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryAddDTO categoryDTO) {
-        CategoryDTO dto = categoryService.update(id, categoryDTO);
-        return ResponseEntity.ok(dto);
+        Optional<CategoryDTO> op = categoryService.update(id, categoryDTO);
+        if (op.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                    .body("Category not found");
+        }
+        return ResponseEntity.ok(op.get()); // 200 OK
     }
-    
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getCategory(@PathVariable Long id) {
-        CategoryDTO categoryDTO = categoryService.getByIdDTO(id);
-        if (categoryDTO != null) {
-            return ResponseEntity.ok(categoryDTO); // Return the category data
-        } else {
+        Optional<CategoryDTO> op = categoryService.getByIdDTO(id);
+        if (op.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
-                                .body("Category not found");
+                    .body("Category not found");
         }
+        return ResponseEntity.ok(op.get()); // 200 OK
     }
 
 }
