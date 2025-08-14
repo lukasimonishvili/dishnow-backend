@@ -1,11 +1,15 @@
 package com.dishNow.dishNow.Services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.Recipe;
@@ -142,5 +146,11 @@ public class RecipeService {
         return recipeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found. Service"));
     }
+
+    public Page<RecipeGetDTO> getPendingRecipes(Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findByStatus(RECIPE_ENUMS.STATUS.PENDING, pageable);
+        return recipes.map(this::convertToGetDTO);
+    }
     
 }
+

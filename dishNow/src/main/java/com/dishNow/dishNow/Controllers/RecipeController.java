@@ -1,5 +1,8 @@
 package com.dishNow.dishNow.Controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,4 +62,11 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/pending")
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
+    public ResponseEntity<Page<RecipeGetDTO>> getPendingRecipes(Pageable pageable) {
+        Page<RecipeGetDTO> pendingRecipes = recipeService.getPendingRecipes(pageable);
+        return ResponseEntity.ok(pendingRecipes);
+
+    }
 }
