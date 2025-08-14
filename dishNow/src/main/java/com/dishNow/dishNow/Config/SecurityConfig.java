@@ -16,16 +16,20 @@ public class SecurityConfig {
         private static final String[] BLACK_LIST_URL = {
                 "/api/user/remove/*",
                 "/api/user/update/*",
-                "/api/user/add/",
+                "/api/user/add/**",
                 "/api/user/get/*",
                 
                 "/api/ingredient/remove/*",
                 "/api/ingredient/update/*",
-                "/api/ingredient/add/",
+                "/api/ingredient/add/**",
                 
                 "/api/category/remove/*",
                 "/api/category/update/*",
-                "/api/category/add/",
+                "/api/category/add/**",
+                
+                "/api/recipe/remove/*",
+                "/api/recipe/update/*",
+                "/api/recipe/add/**",
                 
                 "/api/verify/*",
         };
