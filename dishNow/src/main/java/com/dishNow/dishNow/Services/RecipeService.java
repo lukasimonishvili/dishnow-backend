@@ -5,11 +5,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Models.Category;
@@ -17,8 +16,8 @@ import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
+import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Repositories.RecipeRepository;
-
 
 @Service
 public class RecipeService {
@@ -38,8 +37,12 @@ public class RecipeService {
         return convertToGetDTO(recipe);
     }
 
-    public RecipeGetDTO update(Long id, RecipeDTO recipeDTO) {
-        Recipe recipe = getByID(id);
+    public Optional<RecipeGetDTO> update(Long id, RecipeDTO recipeDTO) {
+        Optional<Recipe> op = getByID(id);
+        if (op.isEmpty()) {
+            return Optional.empty();
+        }
+        Recipe recipe = op.get();
 
         if (recipeDTO.getNameEN() != null)
             recipe.setNameEN(recipeDTO.getNameEN());
@@ -65,7 +68,7 @@ public class RecipeService {
             recipe.setAmountLikes(recipeDTO.getAmountLikes());
 
         if (recipeDTO.getUserID() != null)
-            recipe.setUserCreator( recipeRepository.findUserCreador(recipeDTO.getUserID()) );
+            recipe.setUserCreator(recipeRepository.findUserCreador(recipeDTO.getUserID()));
 
         if (recipeDTO.getStatus() != null)
             recipe.setStatus(recipeDTO.getStatus());
@@ -74,17 +77,24 @@ public class RecipeService {
             recipe.setPhotos(recipeDTO.getPhotos());
 
         recipeRepository.save(recipe); // this performs update
-        return convertToGetDTO(recipe);
+        return Optional.of(convertToGetDTO(recipe));
     }
 
-    public void remove(Long id) {
-        if (!recipeRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with id " + id + " not found");
+    public Optional<Recipe> remove(Long id) {
+        Optional<Recipe> op = getByID(id);
+        if (op.isEmpty()){
+            return Optional.empty();
         }
         recipeRepository.deleteById(id);
+        return Optional.of(op.get());
     }
 
     public Recipe convertToEntity(RecipeDTO dto) {
+        User user = null;
+        Optional<User> op = userService.getUserById(dto.getUserID());
+        if (!op.isEmpty()){
+            user = op.get();
+        }
         Recipe recipe = new Recipe(
                 dto.getNameEN(),
                 dto.getNameES(),
@@ -94,7 +104,7 @@ public class RecipeService {
                 dto.getDescriptionCA(),
                 getIngredients(dto.getIngredientsID()),
                 getCategories(dto.getCategoriesID()),
-                userService.getUserById(dto.getUserID()),
+                user,
                 dto.getAmountLikes(),
                 dto.getStatus(),
                 dto.getPhotos() != null ? dto.getPhotos() : new ArrayList<>());
@@ -104,10 +114,11 @@ public class RecipeService {
     public List<Ingredient> getIngredients(List<Long> ids) {
         List<Ingredient> ingre = new ArrayList<>();
         for (Long id : ids) {
-            try {
-                Ingredient ingredient = ingredientService.getById(id);
-                ingre.add(ingredient);
-            } catch (Exception e) {}
+            Optional<Ingredient> op = ingredientService.getById(id);
+            if (op.isEmpty()) {
+                continue;
+            }
+            ingre.add(op.get());
         }
         return ingre;
     }
@@ -115,10 +126,11 @@ public class RecipeService {
     public List<Category> getCategories(List<Long> ids) {
         List<Category> cats = new ArrayList<>();
         for (Long id : ids) {
-            try {
-                Category cat = categoryService.getById(id);
-                cats.add(cat);
-            } catch (Exception e) {}
+            Optional<Category> op = categoryService.getById(id);
+            if (op.isEmpty()) {
+                continue;
+            }
+            cats.add(op.get());
         }
         return cats;
     }
@@ -139,13 +151,16 @@ public class RecipeService {
                 recipe.getPhotos());
     }
 
-    public RecipeGetDTO getByIdDTO(Long id) {
-        return convertToGetDTO(getByID(id));
+    public Optional<RecipeGetDTO> getByIdDTO(Long id) {
+        Optional<Recipe> op = getByID(id);
+        if (op.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(convertToGetDTO(op.get()));
     }
 
-    public Recipe getByID(Long id) {
-        return recipeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
+    public Optional<Recipe> getByID(Long id) {
+        return recipeRepository.findById(id);
     }
 
     public Page<RecipeGetDTO> getPendingRecipes(Pageable pageable) {
@@ -163,4 +178,3 @@ public class RecipeService {
         return recipes.map(this::convertToGetDTO);
     }
 }
-

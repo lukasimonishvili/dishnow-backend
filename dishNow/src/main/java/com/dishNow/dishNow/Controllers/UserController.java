@@ -24,6 +24,7 @@ import com.dishNow.dishNow.Services.UserService;
 import static com.dishNow.dishNow.Utils.Validations.*;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import jakarta.validation.Valid;
 
@@ -36,31 +37,36 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO registerDTO) {
-        if (!isValidEmail(registerDTO.getEmail())){
+        if (!isValidEmail(registerDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Invalid email");
+                    .body("Invalid email");
         }
-        if (!isValidPassword(registerDTO.getPassword())){
+        if (!isValidPassword(registerDTO.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("Invalid password");
-        }else if (registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
+                    .body("Invalid password");
+        }
+        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("The passwords do not match");
+                    .body("The passwords do not match");
+        }
+        Optional<User> existingUser = userService.getUserByEmail(registerDTO.getEmail());
+        if (existingUser.isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Email is already registered");
         }
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         User user = new User(
-            registerDTO.getName(),
-            registerDTO.getLastName(),
-            registerDTO.getBirthday(),
-            registerDTO.getEmail(),
-            USER_ROLE.USER,
-            false,
-            new ArrayList<>(),
-            new ArrayList<>(),
-            passwordEncoder.encode(registerDTO.getPassword())
-        );
+                registerDTO.getName(),
+                registerDTO.getLastName(),
+                registerDTO.getBirthday(),
+                registerDTO.getEmail(),
+                USER_ROLE.USER,
+                false,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                passwordEncoder.encode(registerDTO.getPassword()));
         UserDTO dto = userService.add(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
     }
@@ -71,30 +77,34 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
     }
 
-    
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<?> removeUser(@PathVariable Long id) {
-        userService.remove(id);
+        Optional<User> op = userService.remove(id);
+        if (op.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                    .body("User not found");
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
-    
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody UserAddDTO userDTO) {
-        UserDTO dto = userService.update(id, userDTO);
+        Optional<UserDTO> dto = userService.update(id, userDTO);
+        if (dto.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
+                    .body("User not found");
+        }
         return ResponseEntity.ok(dto);
     }
-    
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getUser(@PathVariable Long id) {
-        UserDTO dto = userService.getByIdDTO(id);
-        if (dto != null) {
-            return ResponseEntity.ok(dto); // Return the category data
-        } else {
+        Optional<UserDTO> dto = userService.getByIdDTO(id);
+        if (dto.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND) // Return 404 if the category is not found
-                                .body("User not found");
+                    .body("User not found");
         }
+        return ResponseEntity.ok(dto); // Return the category data
     }
 
 }

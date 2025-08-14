@@ -2,11 +2,10 @@ package com.dishNow.dishNow.Services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.User;
@@ -24,9 +23,13 @@ public class UserService {
     @Autowired
     RecipeRepository recipeRepository;
 
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    
+    public Optional<User> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public UserDTO addByDTO(UserAddDTO userAdd) {
@@ -39,11 +42,13 @@ public class UserService {
         return convertToGetDTO(user);
     }
 
-    public void remove(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
+    public Optional<User> remove(Long id) {
+        Optional<User> userOp = getUserById(id);
+        if (userOp.isEmpty()){
+            return Optional.empty();
         }
         userRepository.deleteById(id);
+        return Optional.of(userOp.get());
     }
 
     public UserDTO convertToGetDTO(User user) {
@@ -73,14 +78,21 @@ public class UserService {
         return user;
     }
 
-    public UserDTO getByIdDTO(Long id) {
-        return convertToGetDTO(getUserById(id));
+    public Optional<UserDTO> getByIdDTO(Long id) {
+        Optional<User> userOp = getUserById(id);
+        if (userOp.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(convertToGetDTO(userOp.get()));
     }
 
-    public UserDTO update(Long id, UserAddDTO dto) {
+    public Optional<UserDTO> update(Long id, UserAddDTO dto) {
         // Obtener el usuario existente por su ID
-        User user = getUserById(id);
-
+        Optional<User> userOp = getUserById(id);
+        if (userOp.isEmpty()){
+            return Optional.empty();
+        }
+        User user = userOp.get();
         // Actualizar los atributos solo si los nuevos valores no son null
         if (dto.getName() != null)
             user.setName(dto.getName());
@@ -105,7 +117,7 @@ public class UserService {
         // Guardar el usuario actualizado en la base de datos
         userRepository.save(user); // Esto realiza la actualización
 
-        return updatedDto;
+        return Optional.of(updatedDto);
     }
 
     public List<Long> getRecipesIDs(List<Recipe> recipes) {
@@ -119,15 +131,10 @@ public class UserService {
     public List<Recipe> getRecipesByIDs(List<Long> ids) {
         List<Recipe> recipes = new ArrayList<>();
         for (Long id : ids) {
-            Recipe recipe = getRecipeByID(id);
-            recipes.add(recipe);
+            Optional<Recipe> op = recipeRepository.findById(id);
+            if(op.isEmpty()){continue;}
+            recipes.add(op.get());
         }
         return recipes;
     }
-
-    public Recipe getRecipeByID(Long id) {
-        return recipeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
-    }
-
 }
