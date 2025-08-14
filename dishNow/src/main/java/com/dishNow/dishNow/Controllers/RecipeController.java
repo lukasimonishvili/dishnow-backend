@@ -63,4 +63,12 @@ public class RecipeController {
         Page<RecipeGetDTO> recipes = recipeService.getAllRecipes(pageable);
         return ResponseEntity.ok(recipes);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<RecipeGetDTO>> getRecipesByCategory(
+        @PathVariable Long categoryId,
+        Pageable pageable) {
+            Page<RecipeGetDTO> recipes = recipeService.getRecipesByCategory(categoryId, pageable);
+            return ResponseEntity.ok(recipes);
+        }
 }

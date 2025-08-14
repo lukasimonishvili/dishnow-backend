@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Models.Category;
@@ -22,5 +23,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     @Query("SELECT r.categories FROM Recipe r WHERE r.id = :id")
     List<Category> findCategories(Long id);
     Page<Recipe> findByStatus(RECIPE_ENUMS.STATUS status, Pageable pageable);
+    @Query("SELECT r FROM Recipe r JOIN r.categories c WHERE c.id = :categoryId")
+    Page<Recipe> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
+
 }
 

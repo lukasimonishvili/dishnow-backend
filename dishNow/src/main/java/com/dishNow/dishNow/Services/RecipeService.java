@@ -156,6 +156,11 @@ public class RecipeService {
     public Page<RecipeGetDTO> getAllRecipes(Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findAll(pageable);
         return recipes.map(this::convertToGetDTO);
-    }    
+    }
+    
+    public Page<RecipeGetDTO> getRecipesByCategory(Long categoryId, Pageable pageable) {
+        Page<Recipe> recipes = recipeRepository.findByCategoryId(categoryId, pageable);
+        return recipes.map(this::convertToGetDTO);
+    }
 }
 
