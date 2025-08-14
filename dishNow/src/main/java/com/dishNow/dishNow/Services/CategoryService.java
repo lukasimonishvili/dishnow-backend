@@ -1,14 +1,14 @@
 package com.dishNow.dishNow.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.CategoryAddDTO;
 import com.dishNow.dishNow.Models.CategoryDTO;
 import com.dishNow.dishNow.Repositories.CategoryRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -23,14 +23,14 @@ public class CategoryService {
 
     public void remove(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category with id " + id + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Category with id " + id + " not found");
         }
         categoryRepository.deleteById(id);
     }
 
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category with ID " + id + " not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Category with ID " + id + " not found"));
     }
 
     public CategoryDTO getByIdDTO(Long id) {

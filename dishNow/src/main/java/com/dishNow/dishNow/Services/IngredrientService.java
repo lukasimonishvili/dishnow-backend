@@ -1,14 +1,15 @@
 package com.dishNow.dishNow.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Repositories.IngredientRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class IngredrientService {
@@ -30,14 +31,14 @@ public class IngredrientService {
 
     public void remove(Long id) {
         if (!ingredienteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Ingredient with id " + id + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with id " + id + " not found");
         }
         ingredienteRepository.deleteById(id);
     }
 
     public Ingredient getById(Long id) {
         return ingredienteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ingedient with ID " + id + " not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ingredient with ID " + id + " not found"));
     }
 
     public IngredientDTO update(Long id, IngredientDTO ingredientDTO) {

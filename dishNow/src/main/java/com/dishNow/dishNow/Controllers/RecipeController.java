@@ -15,7 +15,6 @@ import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -45,18 +44,8 @@ public class RecipeController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable Long id) {
-        try {
-            RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
-            return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
-        } catch (EntityNotFoundException e) {
-            // Si no se encuentra la receta, devolver un 404
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Recipe with ID " + id + " not found");
-        } catch (Exception e) {
-            // Captura cualquier otra excepción para no devolver 500
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
-        }
+        RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
+        return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
     }
 
 }
