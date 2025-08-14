@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Models.Category;
@@ -17,7 +19,6 @@ import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Repositories.RecipeRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RecipeService {
@@ -78,7 +79,7 @@ public class RecipeService {
 
     public void remove(Long id) {
         if (!recipeRepository.existsById(id)) {
-            throw new EntityNotFoundException("Recipe with id " + id + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with id " + id + " not found");
         }
         recipeRepository.deleteById(id);
     }
@@ -144,7 +145,7 @@ public class RecipeService {
 
     public Recipe getByID(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found. Service"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
     }
 
     public Page<RecipeGetDTO> getPendingRecipes(Pageable pageable) {

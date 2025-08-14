@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.User;
@@ -13,7 +15,6 @@ import com.dishNow.dishNow.Models.UserDTO;
 import com.dishNow.dishNow.Repositories.RecipeRepository;
 import com.dishNow.dishNow.Repositories.UserRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -25,7 +26,7 @@ public class UserService {
 
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found. Service"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User with ID " + id + " not found"));
     }
 
     public UserDTO addByDTO(UserAddDTO userAdd) {
@@ -40,7 +41,7 @@ public class UserService {
 
     public void remove(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category with id " + id + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with id " + id + " not found");
         }
         userRepository.deleteById(id);
     }
@@ -126,7 +127,7 @@ public class UserService {
 
     public Recipe getRecipeByID(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Recipe with ID " + id + " not found. Service"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
     }
 
 }

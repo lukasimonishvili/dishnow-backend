@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.dishNow.dishNow.Enums.UserEnums.USER_ROLE;
 import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Models.UserAddDTO;
@@ -44,6 +47,9 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                 .body("The passwords do not match");
         }
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
         User user = new User(
             registerDTO.getName(),
             registerDTO.getLastName(),
@@ -53,7 +59,7 @@ public class UserController {
             false,
             new ArrayList<>(),
             new ArrayList<>(),
-            "Hasehdpassword"
+            passwordEncoder.encode(registerDTO.getPassword())
         );
         UserDTO dto = userService.add(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto); // 201 Created
