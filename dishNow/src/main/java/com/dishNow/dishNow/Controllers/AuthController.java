@@ -55,4 +55,5 @@ public class AuthController {
         String username = jwtUtil.validateToken(token.replace("Bearer ", ""));
         return ResponseEntity.ok(username + ", enter on secure end point.");
     }
+    
 }

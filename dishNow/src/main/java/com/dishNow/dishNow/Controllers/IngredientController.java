@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Services.IngredrientService;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.validation.Valid;
 
@@ -62,5 +62,6 @@ public class IngredientController {
         }
         return ResponseEntity.ok(op.get()); // 200 OK
     }
+    
 
 }
