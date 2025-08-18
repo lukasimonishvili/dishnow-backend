@@ -1,15 +1,19 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Services.IngredrientService;
@@ -17,12 +21,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import jakarta.validation.Valid;
 
+
 @RestController
 @RequestMapping("/api/ingredient")
 public class IngredientController {
 
     @Autowired
     private IngredrientService ingredientService;
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllIngredients() {
+        List<Ingredient> result = ingredientService.getAll();
+        return ResponseEntity.ok(result);
+    }
+    
 
     @PostMapping("/add")
     public ResponseEntity<?> addIngredient(@Valid @RequestBody IngredientAddDTO ingredientDTO) {
@@ -36,7 +48,7 @@ public class IngredientController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateIngredient(@PathVariable Long id, @Valid @RequestBody IngredientDTO ingredientDTO) {
         IngredientDTO dto = ingredientService.update(id, ingredientDTO);
         return ResponseEntity.ok(dto);

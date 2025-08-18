@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;

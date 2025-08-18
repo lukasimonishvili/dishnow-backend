@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,11 @@ import jakarta.persistence.EntityNotFoundException;
 public class IngredrientService {
     @Autowired
     private IngredientRepository ingredienteRepository;
+
+    public List<Ingredient> getAll() {
+        List<Ingredient> result = ingredienteRepository.findAll();
+        return result;
+    }
 
     public IngredientDTO add(IngredientAddDTO ingredientDTO) {
         Ingredient ingre = ingredienteRepository.save(convertToEntity(ingredientDTO));
