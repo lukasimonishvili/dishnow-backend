@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +10,6 @@ import com.dishNow.dishNow.Models.IngredientAddDTO;
 import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Repositories.IngredientRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class IngredrientService {
@@ -28,20 +29,25 @@ public class IngredrientService {
         return ingredient;
     }
 
-    public void remove(Long id) {
-        if (!ingredienteRepository.existsById(id)) {
-            throw new EntityNotFoundException("Ingredient with id " + id + " not found");
+    public Optional<Ingredient> remove(Long id) {
+        Optional<Ingredient> op = getById(id);
+        if (op.isEmpty()){
+            return Optional.empty();
         }
         ingredienteRepository.deleteById(id);
+        return Optional.of(op.get());
     }
 
-    public Ingredient getById(Long id) {
-        return ingredienteRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ingedient with ID " + id + " not found"));
+    public Optional<Ingredient> getById(Long id) {
+        return ingredienteRepository.findById(id);
     }
 
-    public IngredientDTO update(Long id, IngredientDTO ingredientDTO) {
-        Ingredient ingredient = getById(id);
+    public Optional<IngredientDTO> update(Long id, IngredientDTO ingredientDTO) {
+        Optional<Ingredient> op = getById(id);
+        if (op.isEmpty()){
+            return Optional.empty();
+        }
+        Ingredient ingredient = op.get();
         if (ingredientDTO.getNameEN() != null)
             ingredient.setNameEN(ingredientDTO.getNameEN());
         if (ingredientDTO.getNameES() != null)
@@ -49,11 +55,15 @@ public class IngredrientService {
         if (ingredientDTO.getNameCA() != null)
             ingredient.setNameCA(ingredientDTO.getNameCA());
         ingredienteRepository.save(ingredient); // this performs update
-        return convertToGetDTO(ingredient);
+        return Optional.of(convertToGetDTO(ingredient));
     }
 
-    public IngredientDTO getByIdDTO(Long id) {
-        return convertToGetDTO(getById(id));
+    public Optional<IngredientDTO> getByIdDTO(Long id) {
+        Optional<Ingredient> op = getById(id);
+        if (op.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(convertToGetDTO(op.get()));
     }
 
     public IngredientDTO convertToGetDTO(Ingredient ingredient) {

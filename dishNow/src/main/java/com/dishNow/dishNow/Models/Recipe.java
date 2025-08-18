@@ -5,14 +5,15 @@ import java.util.List;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Recipe {
@@ -27,40 +28,45 @@ public class Recipe {
     private String descriptionEN;
     private String descriptionES;
     private String descriptionCA;
-    @ElementCollection
-    @CollectionTable(name = "recipe_ingredients", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "ingredient_id")
-    private List<Long> ingredientsID;
-    @ElementCollection
-    @CollectionTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "category_id")
-    private List<Long> categoriesID;
-    private Long userID;
+    // Relación Muchos a Muchos con Ingredients
+    @ManyToMany(cascade = CascadeType.ALL) // Se utiliza CascadeType.ALL para que todas las operaciones se propaguen
+    @JoinTable(name = "recipe_ingredients", // Tabla intermedia
+            joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    private List<Ingredient> ingredients;
+    // Relación Muchos a Muchos con Categories
+    @ManyToMany(cascade = CascadeType.ALL)  // Propaga todas las operaciones
+    @JoinTable(
+        name = "recipe_categories",  // Tabla intermedia
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
+    // Relación Muchos a Uno con User (Creador de la receta)
+    @ManyToOne(cascade = CascadeType.ALL)  // El creador puede ser cascado
+    @JoinColumn(name = "user_id")  // La columna user_id será la clave foránea
+    private User userCreator;
+
     private int amountLikes;
     private RECIPE_ENUMS.STATUS status;
-    @ElementCollection
-    @CollectionTable(name = "recipe_photos", joinColumns = @JoinColumn(name = "recipe_id"))
-    @Column(name = "photo_url")
     private List<String> photos;
 
     // Default constructor for JPA
     public Recipe() {
     }
-
+    
     public Recipe(String nameEN, String nameES, String nameCA, String descriptionEN, String descriptionES,
-            String descriptionCA, List<Long> ingredientsID, List<Long> categoriesID, int amountLikes, Long userID,
-            STATUS status,
-            List<String> photos) {
+            String descriptionCA, List<Ingredient> ingredients, List<Category> categories, User userCreator,
+            int amountLikes, STATUS status, List<String> photos) {
         this.nameEN = nameEN;
         this.nameES = nameES;
         this.nameCA = nameCA;
         this.descriptionEN = descriptionEN;
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
-        this.ingredientsID = ingredientsID;
-        this.categoriesID = categoriesID;
+        this.ingredients = ingredients;
+        this.categories = categories;
+        this.userCreator = userCreator;
         this.amountLikes = amountLikes;
-        this.userID = userID;
         this.status = status;
         this.photos = photos;
     }
@@ -113,22 +119,6 @@ public class Recipe {
         this.descriptionCA = descriptionCA;
     }
 
-    public List<Long> getIngredientsID() {
-        return ingredientsID;
-    }
-
-    public void setIngredientsID(List<Long> ingredientsID) {
-        this.ingredientsID = ingredientsID;
-    }
-
-    public List<Long> getCategoriesID() {
-        return categoriesID;
-    }
-
-    public void setCategoriesID(List<Long> categoriesID) {
-        this.categoriesID = categoriesID;
-    }
-
     public int getAmountLikes() {
         return amountLikes;
     }
@@ -137,12 +127,28 @@ public class Recipe {
         this.amountLikes = amountLikes;
     }
 
-    public Long getUserID() {
-        return userID;
+    public List<Ingredient> getIngredients() {
+        return ingredients;
     }
 
-    public void setUserID(Long userID) {
-        this.userID = userID;
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public User getUserCreator() {
+        return userCreator;
+    }
+
+    public void setUserCreator(User userCreator) {
+        this.userCreator = userCreator;
     }
 
     public RECIPE_ENUMS.STATUS getStatus() {

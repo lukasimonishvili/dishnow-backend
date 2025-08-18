@@ -1,22 +1,26 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dishNow.dishNow.Models.IngredientDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 @RestController
@@ -46,18 +50,37 @@ public class RecipeController {
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable Long id) {
-        try {
-            RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
-            return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
-        } catch (EntityNotFoundException e) {
-            // Si no se encuentra la receta, devolver un 404
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Recipe with ID " + id + " not found");
-        } catch (Exception e) {
-            // Captura cualquier otra excepción para no devolver 500
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An unexpected error occurred: " + e.getMessage());
-        }
+        RecipeGetDTO recipeDTO = recipeService.getByIdDTO(id);
+        return ResponseEntity.ok(recipeDTO); // Si la receta existe, devolverla
     }
 
+    @GetMapping("/pending")
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
+    public ResponseEntity<Page<RecipeGetDTO>> getPendingRecipes(Pageable pageable) {
+        Page<RecipeGetDTO> pendingRecipes = recipeService.getPendingRecipes(pageable);
+        return ResponseEntity.ok(pendingRecipes);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Page<RecipeGetDTO>> getAllRecipes(Pageable pageable) {
+        Page<RecipeGetDTO> recipes = recipeService.getAllRecipes(pageable);
+        return ResponseEntity.ok(recipes);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<RecipeGetDTO>> getRecipesByCategory(
+        @PathVariable Long categoryId,
+        Pageable pageable) {
+            Page<RecipeGetDTO> recipes = recipeService.getRecipesByCategory(categoryId, pageable);
+            return ResponseEntity.ok(recipes);
+        }
+
+    @GetMapping("/by-ingredients")
+    public ResponseEntity<Page<RecipeGetDTO>> getRecipesByUserIngredients(
+        @RequestParam List<Long> ingredients,
+        Pageable pageable) {
+            Page<RecipeGetDTO> recipes = recipeService.getRecipesByUserIngredients(ingredients, pageable);
+            return ResponseEntity.ok(recipes);
+        }
+        
 }
