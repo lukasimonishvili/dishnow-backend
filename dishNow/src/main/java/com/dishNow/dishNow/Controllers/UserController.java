@@ -27,12 +27,19 @@ import static com.dishNow.dishNow.Utils.Validations.isValidPassword;
 
 import jakarta.validation.Valid;
 
+
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?>  getMethodName() {
+        return ResponseEntity.ok(userService.getAll());
+    }
+    
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody UserRegisterDTO registerDTO) {

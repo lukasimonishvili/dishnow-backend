@@ -23,6 +23,13 @@ public class UserService {
     @Autowired
     RecipeRepository recipeRepository;
 
+    public List<UserDTO> getAll() {
+        return userRepository.findAll()
+            .stream()
+            .map(this::convertToGetDTO)
+            .toList();
+    }
+
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
