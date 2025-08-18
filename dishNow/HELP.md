@@ -21,7 +21,7 @@ http://localhost:8080/swagger-ui/index.html
 System uses SQL connection password to connect to DB. it might be different for you. you set it during installing MySQL workbanch
 remember this password and make changes in this file .vscode/launch.json
 
-add this to config
+add this to config and adjust username and password
 "env": {
 "DB_USERNAME": "root",
 "DB_PASSWORD": "1998"
