@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,8 +9,6 @@ import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.CategoryAddDTO;
 import com.dishNow.dishNow.Models.CategoryDTO;
 import com.dishNow.dishNow.Repositories.CategoryRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CategoryService {
@@ -21,20 +21,25 @@ public class CategoryService {
         return convertToGetDTO(cat);
     }
 
-    public void remove(Long id) {
-        if (!categoryRepository.existsById(id)) {
-            throw new EntityNotFoundException("Category with id " + id + " not found");
+    public Optional<Category> remove(Long id) {
+        Optional<Category> op = getById(id);
+        if (op.isEmpty()){
+            return Optional.empty();
         }
         categoryRepository.deleteById(id);
+        return Optional.of(op.get());
     }
 
-    public Category getById(Long id) {
-        return categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Category with ID " + id + " not found"));
+    public Optional<Category> getById(Long id) {
+        return categoryRepository.findById(id);
     }
 
-    public CategoryDTO getByIdDTO(Long id) {
-        return convertToGetDTO(getById(id));
+    public Optional<CategoryDTO> getByIdDTO(Long id) {
+        Optional<Category> categoryOp = getById(id);
+        if (categoryOp.isEmpty()){
+            return Optional.empty();
+        }
+        return Optional.of(convertToGetDTO(categoryOp.get()));
     }
 
     public CategoryDTO convertToGetDTO(Category category) {
@@ -54,8 +59,14 @@ public class CategoryService {
         return category;
     }
 
-    public CategoryDTO update(Long id, CategoryAddDTO categoryDTO) {
-        Category category = getById(id);
+    public Optional<CategoryDTO> update(Long id, CategoryAddDTO categoryDTO) {
+
+        Optional<Category> categoryOp = getById(id);
+        if (categoryOp.isEmpty()){
+            return Optional.empty();
+        }
+
+        Category category = categoryOp.get();
         if (categoryDTO.getNameEN() != null)
             category.setNameEN(categoryDTO.getNameEN());
         if (categoryDTO.getNameES() != null)
@@ -63,7 +74,7 @@ public class CategoryService {
         if (categoryDTO.getNameCA() != null)
             category.setNameCA(categoryDTO.getNameCA());
         categoryRepository.save(category); // this performs update
-        return convertToGetDTO(category);
+        return Optional.of(convertToGetDTO(category));
     }
 
 }

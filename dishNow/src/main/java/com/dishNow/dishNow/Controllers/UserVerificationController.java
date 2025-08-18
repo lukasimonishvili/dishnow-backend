@@ -1,12 +1,16 @@
 package com.dishNow.dishNow.Controllers;
 
-import com.dishNow.dishNow.Models.User;
-import com.dishNow.dishNow.Repositories.UserRepository;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
+import com.dishNow.dishNow.Models.User;
+import com.dishNow.dishNow.Repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api")
@@ -31,6 +35,7 @@ public class UserVerificationController {
         user.setVerified(true);
         userRepository.save(user);
 
+        
         return ResponseEntity.ok("Your account is verified");
     }
 }

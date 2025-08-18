@@ -2,14 +2,30 @@ package com.dishNow.dishNow.Repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
+import com.dishNow.dishNow.Models.Category;
+import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.Recipe;
+import com.dishNow.dishNow.Models.User;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
-    @Query("SELECT r.ingredientsID FROM Recipe r WHERE r.id = :id")
-    List<Long> findIngredientsByRecipeId(Long id);
-    @Query("SELECT r.categoriesID FROM Recipe r WHERE r.id = :id")
-    List<Long> findCategoriesByRecipeId(Long id);
+    @Query("SELECT r.userCreator FROM Recipe r WHERE r.id = :id")
+    User findUserCreador(Long id);
+    @Query("SELECT r.ingredients FROM Recipe r WHERE r.id = :id")
+    List<Ingredient> findIngredients(Long id);
+    @Query("SELECT r.categories FROM Recipe r WHERE r.id = :id")
+    List<Category> findCategories(Long id);
+    Page<Recipe> findByStatus(RECIPE_ENUMS.STATUS status, Pageable pageable);
+    @Query("SELECT r FROM Recipe r JOIN r.categories c WHERE c.id = :categoryId")
+    Page<Recipe> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
+    @Query("SELECT DISTINCT r FROM Recipe r JOIN r.ingredients i WHERE i.id IN :ingredientIds")
+    Page<Recipe> findRecipesWithAnyIngredient(@Param("ingredientIds") List<Long> ingredientIds, Pageable pageable);
 }
+

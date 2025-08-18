@@ -1,4 +1,5 @@
 package com.dishNow.dishNow.Models;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,12 +15,12 @@ public class Category {
     private String nameCA;
     
     public Category(){}
+
     public Category(String nameEN, String nameES, String nameCA) {
         this.nameEN = nameEN;
         this.nameES = nameES;
         this.nameCA = nameCA;
     }
-
     public Long getId() {
         return id;
     }
