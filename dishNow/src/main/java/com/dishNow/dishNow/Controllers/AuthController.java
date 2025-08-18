@@ -19,8 +19,6 @@ import com.dishNow.dishNow.Models.UserLoginDTO;
 import com.dishNow.dishNow.Repositories.UserRepository;
 import com.dishNow.dishNow.Utils.JwtUtil;
 
-import jakarta.validation.Valid;
-
 @RestController
 @RequestMapping("/api")
 public class AuthController {
