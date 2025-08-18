@@ -26,3 +26,4 @@ add this to config and adjust username and password
 "DB_USERNAME": "root",
 "DB_PASSWORD": "1998"
 }
+

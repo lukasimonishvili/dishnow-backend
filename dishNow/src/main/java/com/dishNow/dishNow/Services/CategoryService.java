@@ -1,5 +1,6 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ import com.dishNow.dishNow.Repositories.CategoryRepository;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    public List<Category> getAll() {
+        List<Category> result = categoryRepository.findAll();
+        return result;
+    }
 
     public CategoryDTO add(CategoryAddDTO categoryDTO) {
         Category cat = convertToEntity(categoryDTO);

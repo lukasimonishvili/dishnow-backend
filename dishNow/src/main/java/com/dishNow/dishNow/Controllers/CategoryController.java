@@ -1,5 +1,6 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,20 @@ import com.dishNow.dishNow.Services.CategoryService;
 
 import jakarta.validation.Valid;
 
+
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllCategories() {
+        List<Category> result = categoryService.getAll();
+        return ResponseEntity.ok(result);
+    }
+    
 
     @PostMapping("/add")
     public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryAddDTO categoryDTO) {
