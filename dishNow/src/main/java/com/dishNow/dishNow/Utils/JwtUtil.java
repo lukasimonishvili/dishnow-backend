@@ -1,21 +1,22 @@
 package com.dishNow.dishNow.Utils;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-
 import java.security.Key;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
 @Component
 public class JwtUtil {
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String generateToken(String username) {
+    public String generateToken(String id, String role) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(id)
+                .claim("role", role) // Puedes agregar más claims si es necesario
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 30)) // 30 dias
                 .signWith(key)
