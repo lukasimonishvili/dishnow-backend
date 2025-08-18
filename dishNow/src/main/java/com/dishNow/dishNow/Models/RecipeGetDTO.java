@@ -39,7 +39,7 @@ public class RecipeGetDTO {
     private RECIPE_ENUMS.STATUS status;
 
     private List<@NotBlank String> photos;
-
+    public RecipeGetDTO() {}
     public RecipeGetDTO(Long id, @NotBlank(message = "Name (EN) is required") String nameEN,
             @NotBlank(message = "Name (ES) is required") String nameES,
             @NotBlank(message = "Name (CN) is required") String nameCA,

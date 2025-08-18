@@ -8,7 +8,8 @@ import com.dishNow.dishNow.Enums.UserEnums.USER_ROLE;
 public class UserDTO extends UserAddDTO{
     
     private Long id;
-    
+
+    public UserDTO(){}
     public UserDTO(Long id, String name, String lastName, LocalDate birthday, String email, USER_ROLE role, boolean verified,
             List<Long> favoriteRecipes, List<Long> recipesCreated) {
         super(name, lastName, birthday, email, role, verified, favoriteRecipes, recipesCreated);

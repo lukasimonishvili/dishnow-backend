@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Models.UserLoginDTO;
 import com.dishNow.dishNow.Repositories.UserRepository;
 import com.dishNow.dishNow.Utils.JwtUtil;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
@@ -31,16 +32,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLogin) {
-
         Optional<User> userOpt = userRepository.findByEmail(userLogin.getEmail());
         if (userOpt.isEmpty()) {
-            return ResponseEntity.status(404).body("User not found");
+            return ResponseEntity.status(404).body("User not found by email: " + userLogin.getEmail());
         }
         User user = userOpt.get();
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        if (passwordEncoder.matches(userLogin.getPassword(), user.getPasswordHash())) {
+        if (!passwordEncoder.matches(userLogin.getPassword(), user.getPasswordHash())) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Invalid credentials");
@@ -55,5 +55,5 @@ public class AuthController {
         String username = jwtUtil.validateToken(token.replace("Bearer ", ""));
         return ResponseEntity.ok(username + ", enter on secure end point.");
     }
-    
+
 }

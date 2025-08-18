@@ -41,7 +41,7 @@ public class RecipeDTO {
     private RECIPE_ENUMS.STATUS status;
 
     private List<@NotBlank String> photos;
-
+    public RecipeDTO() {}
     public RecipeDTO(@NotBlank(message = "Name (EN) is required") String nameEN,
             @NotBlank(message = "Name (ES) is required") String nameES,
             @NotBlank(message = "Name (CN) is required") String nameCA,

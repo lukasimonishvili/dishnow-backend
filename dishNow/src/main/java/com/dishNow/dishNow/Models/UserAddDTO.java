@@ -17,6 +17,7 @@ public class UserAddDTO {
     private List<Long> favoriteRecipes;
     private List<Long> recipesCreated;
 
+    public UserAddDTO(){}
     public UserAddDTO(String name, String lastName, LocalDate birthday, String email, USER_ROLE role,
             boolean verified, List<Long> favoriteRecipes, List<Long> recipesCreated) {
         this.name = name;
