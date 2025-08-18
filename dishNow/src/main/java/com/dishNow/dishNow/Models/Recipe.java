@@ -33,17 +33,12 @@ public class Recipe {
     @JoinTable(name = "recipe_ingredients", // Tabla intermedia
             joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> ingredients;
-    // Relación Muchos a Muchos con Categories
-    @ManyToMany(cascade = CascadeType.ALL)  // Propaga todas las operaciones
-    @JoinTable(
-        name = "recipe_categories",  // Tabla intermedia
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> categories;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     // Relación Muchos a Uno con User (Creador de la receta)
-    @ManyToOne(cascade = CascadeType.ALL)  // El creador puede ser cascado
-    @JoinColumn(name = "user_id")  // La columna user_id será la clave foránea
+    @ManyToOne(cascade = CascadeType.ALL) // El creador puede ser cascado
+    @JoinColumn(name = "user_id") // La columna user_id será la clave foránea
     private User userCreator;
 
     private int amountLikes;
@@ -53,9 +48,9 @@ public class Recipe {
     // Default constructor for JPA
     public Recipe() {
     }
-    
+
     public Recipe(String nameEN, String nameES, String nameCA, String descriptionEN, String descriptionES,
-            String descriptionCA, List<Ingredient> ingredients, List<Category> categories, User userCreator,
+            String descriptionCA, List<Ingredient> ingredients, Category category, User userCreator,
             int amountLikes, STATUS status, List<String> photos) {
         this.nameEN = nameEN;
         this.nameES = nameES;
@@ -64,7 +59,7 @@ public class Recipe {
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
         this.ingredients = ingredients;
-        this.categories = categories;
+        this.category = category;
         this.userCreator = userCreator;
         this.amountLikes = amountLikes;
         this.status = status;
@@ -135,12 +130,12 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public User getUserCreator() {

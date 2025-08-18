@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.RecipeAddDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
@@ -31,8 +33,8 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRecipe(@Valid @RequestBody RecipeDTO recipeDTO) {
-        RecipeGetDTO createdRecipe = recipeService.add(recipeDTO);
+    public ResponseEntity<?> addRecipe(@Valid @RequestBody RecipeAddDTO recipeAddDTO) {
+        RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
     }
 
@@ -42,7 +44,7 @@ public class RecipeController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // 204 No Content
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<?> updateRecipe(@PathVariable Long id, @Valid @RequestBody RecipeDTO recipeDTO) {
         RecipeGetDTO updatedRecipe = recipeService.update(id, recipeDTO);
         return ResponseEntity.ok(updatedRecipe); // 200 OK

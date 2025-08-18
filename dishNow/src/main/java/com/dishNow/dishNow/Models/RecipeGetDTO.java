@@ -29,8 +29,8 @@ public class RecipeGetDTO {
     @NotEmpty(message = "Ingredients are required")
     private List<@NotNull Ingredient> ingredientsID;
 
-    @NotEmpty(message = "Categories are required")
-    private List<@NotNull Category> categoriesID;
+    @NotEmpty(message = "Category are required")
+    private Category categoryId;
 
     @Min(value = 0, message = "Amount of likes cannot be negative")
     private Integer amountLikes;
@@ -47,7 +47,7 @@ public class RecipeGetDTO {
             @NotBlank(message = "Description (ES) is required") String descriptionES,
             @NotBlank(message = "Description (CN) is required") String descriptionCA,
             @NotEmpty(message = "Ingredients are required") List<@NotNull Ingredient> ingredientsID,
-            @NotEmpty(message = "Categories are required") List<@NotNull Category> categoriesID,
+            @NotEmpty(message = "Category are required") Category categoryId,
             @Min(value = 0, message = "Amount of likes cannot be negative") Integer amountLikes,
             RECIPE_ENUMS.STATUS status, List<@NotBlank String> photos) {
         this.id = id;
@@ -58,12 +58,18 @@ public class RecipeGetDTO {
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
         this.ingredientsID = ingredientsID;
-        this.categoriesID = categoriesID;
+        this.categoryId = categoryId;
         this.amountLikes = amountLikes;
         this.status = status;
         this.photos = photos;
     }
 
+    public Category getCategoryId() {
+        return categoryId;
+    }
+    public void setCategoryId(Category categoryId) {
+        this.categoryId = categoryId;
+    }
     public Long getID() {
         return id;
     }
@@ -128,13 +134,7 @@ public class RecipeGetDTO {
         this.ingredientsID = ingredientsID;
     }
 
-    public List<Category> getCategoriesID() {
-        return categoriesID;
-    }
 
-    public void setCategoriesID(List<Category> categoriesID) {
-        this.categoriesID = categoriesID;
-    }
 
     public Integer getAmountLikes() {
         return amountLikes;

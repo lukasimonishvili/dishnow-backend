@@ -28,8 +28,8 @@ public class RecipeDTO {
     @NotEmpty(message = "Ingredients are required")
     private List<@NotNull Long> ingredientsID;
 
-    @NotEmpty(message = "Categories are required")
-    private List<@NotNull Long> categoriesID;
+    @NotEmpty(message = "Category are required")
+    private Long categoryId;
 
     @Min(value = 0, message = "Amount of likes cannot be negative")
     private Integer amountLikes;
@@ -49,7 +49,7 @@ public class RecipeDTO {
             @NotBlank(message = "Description (ES) is required") String descriptionES,
             @NotBlank(message = "Description (CN) is required") String descriptionCA,
             @NotEmpty(message = "Ingredients are required") List<@NotNull Long> ingredientsID,
-            @NotEmpty(message = "Categories are required") List<@NotNull Long> categoriesID,
+            @NotEmpty(message = "Category are required") Long categoryId,
             @Min(value = 0, message = "Amount of likes cannot be negative") int amountLikes,
             @NotNull(message = "User ID is required") Long userID, RECIPE_ENUMS.STATUS status,
             List<@NotBlank String> photos) {
@@ -60,7 +60,7 @@ public class RecipeDTO {
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
         this.ingredientsID = ingredientsID;
-        this.categoriesID = categoriesID;
+        this.categoryId = categoryId;
         this.amountLikes = amountLikes;
         this.userID = userID;
         this.status = status;
@@ -122,14 +122,7 @@ public class RecipeDTO {
     public void setIngredientsID(List<Long> ingredientsID) {
         this.ingredientsID = ingredientsID;
     }
-
-    public List<Long> getCategoriesID() {
-        return categoriesID;
-    }
-
-    public void setCategoriesID(List<Long> categoriesID) {
-        this.categoriesID = categoriesID;
-    }
+    
 
     public Integer getAmountLikes() {
         return amountLikes;
@@ -162,8 +155,13 @@ public class RecipeDTO {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
+    public Long getCategoryId() {
+        return categoryId;
+    }
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
 
-    // Getters and Setters
 }
 
  

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +16,10 @@ import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.Recipe;
+import com.dishNow.dishNow.Models.RecipeAddDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
+import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Repositories.RecipeRepository;
 
 
@@ -32,8 +35,8 @@ public class RecipeService {
     @Autowired
     private UserService userService;
 
-    public RecipeGetDTO add(RecipeDTO recipeDTO) {
-        Recipe recipe = convertToEntity(recipeDTO);
+    public RecipeGetDTO add(RecipeAddDTO recipeAddDTO) {
+        Recipe recipe = convertToEntity(recipeAddDTO);
         recipeRepository.save(recipe);
         return convertToGetDTO(recipe);
     }
@@ -41,37 +44,52 @@ public class RecipeService {
     public RecipeGetDTO update(Long id, RecipeDTO recipeDTO) {
         Recipe recipe = getByID(id);
 
-        if (recipeDTO.getNameEN() != null)
+        if (recipeDTO.getNameEN() != null) {
             recipe.setNameEN(recipeDTO.getNameEN());
-        if (recipeDTO.getNameES() != null)
+        }
+        if (recipeDTO.getNameES() != null) {
             recipe.setNameES(recipeDTO.getNameES());
-        if (recipeDTO.getNameCA() != null)
+        }
+        if (recipeDTO.getNameCA() != null) {
             recipe.setNameCA(recipeDTO.getNameCA());
+        }
 
-        if (recipeDTO.getDescriptionEN() != null)
+        if (recipeDTO.getDescriptionEN() != null) {
             recipe.setDescriptionEN(recipeDTO.getDescriptionEN());
-        if (recipeDTO.getDescriptionES() != null)
+        }
+        if (recipeDTO.getDescriptionES() != null) {
             recipe.setDescriptionES(recipeDTO.getDescriptionES());
-        if (recipeDTO.getDescriptionCA() != null)
+        }
+        if (recipeDTO.getDescriptionCA() != null) {
             recipe.setDescriptionCA(recipeDTO.getDescriptionCA());
+        }
 
-        if (recipeDTO.getIngredientsID() != null)
-            recipe.setIngredients(recipeRepository.findIngredients(id));
+        if (recipeDTO.getIngredientsID() != null) {
+            recipe.setIngredients(getIngredients(recipeDTO.getIngredientsID()));
+        }
 
-        if (recipeDTO.getCategoriesID() != null)
-            recipe.setCategories(recipeRepository.findCategories(id));
+        if (recipeDTO.getCategoryId() != null) {
+            Optional<Category> catOp = categoryService.getById(recipeDTO.getCategoryId());
+            if (catOp.isPresent()) {
+                recipe.setCategory(catOp.get());
+            }
+        }
 
-        if (recipeDTO.getAmountLikes() != null)
+        if (recipeDTO.getAmountLikes() != null) {
             recipe.setAmountLikes(recipeDTO.getAmountLikes());
+        }
 
-        if (recipeDTO.getUserID() != null)
-            recipe.setUserCreator( recipeRepository.findUserCreador(recipeDTO.getUserID()) );
+        if (recipeDTO.getUserID() != null) {
+            recipe.setUserCreator(recipeRepository.findUserCreador(recipeDTO.getUserID()));
+        }
 
-        if (recipeDTO.getStatus() != null)
+        if (recipeDTO.getStatus() != null) {
             recipe.setStatus(recipeDTO.getStatus());
+        }
 
-        if (recipeDTO.getPhotos() != null)
+        if (recipeDTO.getPhotos() != null) {
             recipe.setPhotos(recipeDTO.getPhotos());
+        }
 
         recipeRepository.save(recipe); // this performs update
         return convertToGetDTO(recipe);
@@ -84,20 +102,36 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    public Recipe convertToEntity(RecipeDTO dto) {
+    public Recipe convertToEntity(RecipeAddDTO dto) {
+        Optional<Category> catOp = categoryService.getById(dto.getCategory());
+        Category cat = null;
+        if (catOp.isPresent()) {
+            cat = catOp.get();
+        }
+        Optional<User> userOp = userService.getUserById(dto.getUser());
+        User user = null;
+        if(userOp.isPresent()) {
+            user = userOp.get();
+        }
+
+        List<String> photos = new ArrayList<>();
+        if (dto.getPhotos() != null) {
+
+        }
+        
         Recipe recipe = new Recipe(
-                dto.getNameEN(),
-                dto.getNameES(),
-                dto.getNameCA(),
-                dto.getDescriptionEN(),
-                dto.getDescriptionES(),
-                dto.getDescriptionCA(),
-                getIngredients(dto.getIngredientsID()),
-                getCategories(dto.getCategoriesID()),
-                userService.getUserById(dto.getUserID()).orElse(null),
-                dto.getAmountLikes(),
-                dto.getStatus(),
-                dto.getPhotos() != null ? dto.getPhotos() : new ArrayList<>());
+                dto.getName(),
+                dto.getName(),
+                dto.getName(),
+                dto.getDescription(),
+                dto.getDescription(),
+                dto.getDescription(),
+                getIngredients(dto.getIngredients()),
+                cat,
+                user,
+                0,
+                RECIPE_ENUMS.STATUS.PENDING,
+                photos);
         return recipe;
     }
 
@@ -105,26 +139,18 @@ public class RecipeService {
         List<Ingredient> ingre = new ArrayList<>();
         for (Long id : ids) {
             try {
-                Ingredient ingredient = ingredientService.getById(id).orElse(null);
+                Optional<Ingredient> ingredientOp = ingredientService.getById(id);
+                Ingredient ingredient = null;
+                if (!ingredientOp.isEmpty()) {
+                    ingredient = ingredientOp.get();
+                }
                 if (ingredient != null) {
                     ingre.add(ingredient);
                 }
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
         return ingre;
-    }
-
-    public List<Category> getCategories(List<Long> ids) {
-        List<Category> cats = new ArrayList<>();
-        for (Long id : ids) {
-            try {
-                Category cat = categoryService.getById(id).orElse(null);
-                if (cat != null) {
-                    cats.add(cat);
-                }
-            } catch (Exception e) {}
-        }
-        return cats;
     }
 
     public RecipeGetDTO convertToGetDTO(Recipe recipe) {
@@ -137,7 +163,7 @@ public class RecipeService {
                 recipe.getDescriptionES(),
                 recipe.getDescriptionCA(),
                 recipeRepository.findIngredients(recipe.getId()),
-                recipeRepository.findCategories(recipe.getId()),
+                recipeRepository.findCategory(recipe.getId()),
                 recipe.getAmountLikes(),
                 recipe.getStatus(),
                 recipe.getPhotos());
@@ -149,7 +175,8 @@ public class RecipeService {
 
     public Recipe getByID(Long id) {
         return recipeRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe with ID " + id + " not found"));
     }
 
     public Page<RecipeGetDTO> getPendingRecipes(Pageable pageable) {
@@ -161,37 +188,38 @@ public class RecipeService {
         Page<Recipe> recipes = recipeRepository.findAll(pageable);
         return recipes.map(this::convertToGetDTO);
     }
-    
+
     public Page<RecipeGetDTO> getRecipesByCategory(Long categoryId, Pageable pageable) {
         Page<Recipe> recipes = recipeRepository.findByCategoryId(categoryId, pageable);
         return recipes.map(this::convertToGetDTO);
     }
 
     public Page<RecipeGetDTO> getRecipesByUserIngredients(List<Long> ingredientIds, Pageable pageable) {
-    // Fetch matching recipes (any overlap)
-    Page<Recipe> recipesPage = recipeRepository.findRecipesWithAnyIngredient(ingredientIds, pageable);
+        // Fetch matching recipes (any overlap)
+        Page<Recipe> recipesPage = recipeRepository.findRecipesWithAnyIngredient(ingredientIds, pageable);
 
-    // Sort them: fully match first, then partial
-    List<Recipe> sortedRecipes = recipesPage.getContent().stream()
-        .sorted((r1, r2) -> {
-            boolean r1FullMatch = ingredientIds.containsAll(
-                    r1.getIngredients().stream().map(Ingredient::getId).toList());
-            boolean r2FullMatch = ingredientIds.containsAll(
-                    r2.getIngredients().stream().map(Ingredient::getId).toList());
+        // Sort them: fully match first, then partial
+        List<Recipe> sortedRecipes = recipesPage.getContent().stream()
+                .sorted((r1, r2) -> {
+                    boolean r1FullMatch = ingredientIds.containsAll(
+                            r1.getIngredients().stream().map(Ingredient::getId).toList());
+                    boolean r2FullMatch = ingredientIds.containsAll(
+                            r2.getIngredients().stream().map(Ingredient::getId).toList());
 
-            if (r1FullMatch && !r2FullMatch) return -1;
-            if (!r1FullMatch && r2FullMatch) return 1;
-            return 0; // keep relative order
-        })
-        .toList();
+                    if (r1FullMatch && !r2FullMatch)
+                        return -1;
+                    if (!r1FullMatch && r2FullMatch)
+                        return 1;
+                    return 0; // keep relative order
+                })
+                .toList();
 
-    // Map to DTOs
-    List<RecipeGetDTO> dtoList = sortedRecipes.stream()
-            .map(this::convertToGetDTO)
-            .toList();
+        // Map to DTOs
+        List<RecipeGetDTO> dtoList = sortedRecipes.stream()
+                .map(this::convertToGetDTO)
+                .toList();
 
-    // Return as a Page keeping pageable meta
-    return new org.springframework.data.domain.PageImpl<>(dtoList, pageable, recipesPage.getTotalElements());
+        // Return as a Page keeping pageable meta
+        return new org.springframework.data.domain.PageImpl<>(dtoList, pageable, recipesPage.getTotalElements());
+    }
 }
-}
-
