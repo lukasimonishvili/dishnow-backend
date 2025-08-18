@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.CategoryAddDTO;
 import com.dishNow.dishNow.Models.CategoryDTO;
 import com.dishNow.dishNow.Services.CategoryService;
 
 import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/category")
@@ -24,6 +28,12 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @GetMapping("/getAll")
+    public ResponseEntity<?> getAllCategories() {
+        List<Category> result = categoryService.getAll();
+        return ResponseEntity.ok(result);
+    }
+    
 
     @PostMapping("/add")
     public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryAddDTO categoryDTO) {

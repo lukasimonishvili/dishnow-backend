@@ -1,5 +1,7 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,11 @@ import jakarta.persistence.EntityNotFoundException;
 public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
+
+    public List<Category> getAll() {
+        List<Category> result = categoryRepository.findAll();
+        return result;
+    }
 
     public CategoryDTO add(CategoryAddDTO categoryDTO) {
         Category cat = convertToEntity(categoryDTO);
