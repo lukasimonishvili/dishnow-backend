@@ -1,5 +1,6 @@
 package com.dishNow.dishNow.Services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ import com.dishNow.dishNow.Repositories.IngredientRepository;
 public class IngredrientService {
     @Autowired
     private IngredientRepository ingredienteRepository;
+
+    public List<Ingredient> getAll() {
+        List<Ingredient> result = ingredienteRepository.findAll();
+        return result;
+    }
 
     public IngredientDTO add(IngredientAddDTO ingredientDTO) {
         Ingredient ingre = ingredienteRepository.save(convertToEntity(ingredientDTO));
