@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dishNow.dishNow.Models.RecipeAddDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
@@ -33,8 +35,8 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addRecipe(@Valid @RequestBody RecipeAddDTO recipeAddDTO) {
-        RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO);
+    public ResponseEntity<?> addRecipe(@Valid @RequestBody RecipeAddDTO recipeAddDTO, @RequestPart("photos") List<MultipartFile> photos) {
+        RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO, photos);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
     }
 

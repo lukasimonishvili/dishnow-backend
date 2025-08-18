@@ -3,6 +3,7 @@ package com.dishNow.dishNow.Services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
@@ -22,10 +24,10 @@ import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Models.User;
 import com.dishNow.dishNow.Repositories.RecipeRepository;
 
-
 @Service
 public class RecipeService {
-
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
@@ -35,8 +37,16 @@ public class RecipeService {
     @Autowired
     private UserService userService;
 
-    public RecipeGetDTO add(RecipeAddDTO recipeAddDTO) {
-        Recipe recipe = convertToEntity(recipeAddDTO);
+    public RecipeGetDTO add(RecipeAddDTO recipeAddDTO, List<MultipartFile> photosFiles) {
+        List<String> photos = new ArrayList<>();
+        for (MultipartFile file : photosFiles) {
+            try {
+                photos.add(cloudinaryService.uploadFile(file));
+            } catch (IOException e) {
+            }
+        }
+
+        Recipe recipe = createRecipe(recipeAddDTO, photos);
         recipeRepository.save(recipe);
         return convertToGetDTO(recipe);
     }
@@ -102,7 +112,7 @@ public class RecipeService {
         recipeRepository.deleteById(id);
     }
 
-    public Recipe convertToEntity(RecipeAddDTO dto) {
+    public Recipe createRecipe(RecipeAddDTO dto, List<String> photos) {
         Optional<Category> catOp = categoryService.getById(dto.getCategory());
         Category cat = null;
         if (catOp.isPresent()) {
@@ -110,15 +120,10 @@ public class RecipeService {
         }
         Optional<User> userOp = userService.getUserById(dto.getUser());
         User user = null;
-        if(userOp.isPresent()) {
+        if (userOp.isPresent()) {
             user = userOp.get();
         }
 
-        List<String> photos = new ArrayList<>();
-        if (dto.getPhotos() != null) {
-
-        }
-        
         Recipe recipe = new Recipe(
                 dto.getName(),
                 dto.getName(),

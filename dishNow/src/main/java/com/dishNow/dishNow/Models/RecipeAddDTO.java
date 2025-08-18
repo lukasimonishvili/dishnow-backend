@@ -3,8 +3,6 @@ package com.dishNow.dishNow.Models;
 import jakarta.validation.constraints.*;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class RecipeAddDTO {
 
     @NotBlank(message = "Name is required")
@@ -21,19 +19,18 @@ public class RecipeAddDTO {
     @NotNull(message = "User ID is required")
     private Long user;
 
-    private List<MultipartFile> photos;
+    
     public RecipeAddDTO() {}
     public RecipeAddDTO(@NotBlank(message = "Name is required") String name,
             @NotBlank(message = "Description is required") String description,
             @NotEmpty(message = "Ingredients are required") List<@NotNull Long> ingredients,
             @NotEmpty(message = "Category are required") Long category,
-            @NotNull(message = "User ID is required") Long user, List<MultipartFile> photos) {
+            @NotNull(message = "User ID is required") Long user) {
         this.name = name;
         this.description = description;
         this.ingredients = ingredients;
         this.category = category;
         this.user = user;
-        this.photos = photos;
     }
     public String getName() {
         return name;
@@ -64,12 +61,6 @@ public class RecipeAddDTO {
     }
     public void setUser(Long user) {
         this.user = user;
-    }
-    public List<MultipartFile> getPhotos() {
-        return photos;
-    }
-    public void setPhotos(List<MultipartFile> photos) {
-        this.photos = photos;
     }
 
     
