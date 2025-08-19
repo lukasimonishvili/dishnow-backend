@@ -38,11 +38,19 @@ public class RecipeService {
     private UserService userService;
 
     public RecipeGetDTO add(RecipeAddDTO recipeAddDTO, List<MultipartFile> photosFiles) {
+        if(photosFiles.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one photo is required");
+        }
+
         List<String> photos = new ArrayList<>();
         for (MultipartFile file : photosFiles) {
+            if (file.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo file is empty");
+            }
             try {
                 photos.add(cloudinaryService.uploadFile(file));
             } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error uploading photo: " + e.getMessage());
             }
         }
 

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,14 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addRecipe(@Valid @RequestBody RecipeAddDTO recipeAddDTO, @RequestPart("photos") List<MultipartFile> photos) {
-        RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO, photos);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
+    @PostMapping(value="/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addRecipe(@Valid @RequestPart RecipeAddDTO recipeAddDTO, @RequestPart("photos") List<MultipartFile> photos) {
+        try {
+            RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO, photos);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 Bad Request
+        }
     }
 
     @DeleteMapping("/remove/{id}")
