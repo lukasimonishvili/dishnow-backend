@@ -30,8 +30,14 @@ public class Recipe {
     private String nameEN;
     private String nameES;
     private String nameCA;
+
+    @Column(name = "descriptionen", length = 2000)
     private String descriptionEN;
+
+    @Column(name = "descriptiones", length = 2000)
     private String descriptionES;
+
+    @Column(name = "descriptionca", length = 2000)
     private String descriptionCA;
 
     @ManyToMany

@@ -14,8 +14,9 @@ import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.Ingredient;
 import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.User;
+import com.dishNow.dishNow.interfaces.RecipeRepositoryCustom;
 
-public interface RecipeRepository extends JpaRepository<Recipe, Long> {
+public interface RecipeRepository extends JpaRepository<Recipe, Long>, RecipeRepositoryCustom  {
     @Query("SELECT r.userCreator FROM Recipe r WHERE r.id = :id")
     User findUserCreador(Long id);
     @Query("SELECT r.ingredients FROM Recipe r WHERE r.id = :id")

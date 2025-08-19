@@ -75,8 +75,12 @@ public class RecipeController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<RecipeGetDTO>> getAllRecipes(Pageable pageable) {
-        Page<RecipeGetDTO> recipes = recipeService.getAllRecipes(pageable);
+    public ResponseEntity<?> getAllRecipes( 
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<Long> ingredientIds,
+            @RequestParam(required = false) String keyword
+        ) {
+        List<RecipeGetDTO> recipes = recipeService.getAllRecipes(categoryId, ingredientIds, keyword);
         return ResponseEntity.ok(recipes);
     }
 
