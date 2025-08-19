@@ -6,6 +6,9 @@ import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,6 +46,10 @@ public class Recipe {
 
     private int amountLikes;
     private RECIPE_ENUMS.STATUS status;
+
+    @ElementCollection
+    @CollectionTable(name = "recipe_photos", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "photo_url")
     private List<String> photos;
 
     // Default constructor for JPA

@@ -27,10 +27,10 @@ public class RecipeGetDTO {
     private String descriptionCA;
 
     @NotEmpty(message = "Ingredients are required")
-    private List<@NotNull Ingredient> ingredientsID;
+    private List<@NotNull Ingredient> ingredients;
 
     @NotEmpty(message = "Category are required")
-    private Category categoryId;
+    private Category category;
 
     @Min(value = 0, message = "Amount of likes cannot be negative")
     private Integer amountLikes;
@@ -39,15 +39,18 @@ public class RecipeGetDTO {
     private RECIPE_ENUMS.STATUS status;
 
     private List<@NotBlank String> photos;
-    public RecipeGetDTO() {}
+
+    public RecipeGetDTO() {
+    }
+
     public RecipeGetDTO(Long id, @NotBlank(message = "Name (EN) is required") String nameEN,
             @NotBlank(message = "Name (ES) is required") String nameES,
             @NotBlank(message = "Name (CN) is required") String nameCA,
             @NotBlank(message = "Description (EN) is required") String descriptionEN,
             @NotBlank(message = "Description (ES) is required") String descriptionES,
             @NotBlank(message = "Description (CN) is required") String descriptionCA,
-            @NotEmpty(message = "Ingredients are required") List<@NotNull Ingredient> ingredientsID,
-            @NotEmpty(message = "Category are required") Category categoryId,
+            @NotEmpty(message = "Ingredients are required") List<@NotNull Ingredient> ingredients,
+            @NotEmpty(message = "Category are required") Category category,
             @Min(value = 0, message = "Amount of likes cannot be negative") Integer amountLikes,
             RECIPE_ENUMS.STATUS status, List<@NotBlank String> photos) {
         this.id = id;
@@ -57,19 +60,13 @@ public class RecipeGetDTO {
         this.descriptionEN = descriptionEN;
         this.descriptionES = descriptionES;
         this.descriptionCA = descriptionCA;
-        this.ingredientsID = ingredientsID;
-        this.categoryId = categoryId;
+        this.ingredients = ingredients;
+        this.category = category;
         this.amountLikes = amountLikes;
         this.status = status;
         this.photos = photos;
     }
 
-    public Category getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(Category categoryId) {
-        this.categoryId = categoryId;
-    }
     public Long getID() {
         return id;
     }
@@ -126,16 +123,6 @@ public class RecipeGetDTO {
         this.descriptionCA = descriptionCA;
     }
 
-    public List<Ingredient> getIngredientsID() {
-        return ingredientsID;
-    }
-
-    public void setIngredientsID(List<Ingredient> ingredientsID) {
-        this.ingredientsID = ingredientsID;
-    }
-
-
-
     public Integer getAmountLikes() {
         return amountLikes;
     }
@@ -159,4 +146,21 @@ public class RecipeGetDTO {
     public void setPhotos(List<String> photos) {
         this.photos = photos;
     }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
 }

@@ -26,11 +26,10 @@ import com.dishNow.dishNow.Models.RecipeAddDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,7 +50,7 @@ public class RecipeController {
             RecipeAddDTO body = mapper.convertValue(map, RecipeAddDTO.class);
             RecipeGetDTO createdRecipe = recipeService.add(body, photos);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
-        } catch (Exception e) {
+        } catch (JsonProcessingException | IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 Bad Request
         }
     }
