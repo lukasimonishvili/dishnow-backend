@@ -24,7 +24,7 @@ public class SecurityConfig {
             "/api/ingredient/remove/*", "/api/ingredient/update/**", "/api/ingredient/add/**",
             "/api/category/remove/*", "/api/category/update/*", "/api/category/add/**",
             "/api/recipe/remove/*", "/api/recipe/update/*",
-            "/api/verify/*" //"/api/recipe/add/**"
+            "/api/verify/*", "/api/recipe/add/**"
     };
 
     @Autowired

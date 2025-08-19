@@ -5,7 +5,6 @@ import java.util.List;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -34,17 +33,21 @@ public class Recipe {
     private String descriptionEN;
     private String descriptionES;
     private String descriptionCA;
-    // Relación Muchos a Muchos con Ingredients
-    @ManyToMany(cascade = CascadeType.ALL) // Se utiliza CascadeType.ALL para que todas las operaciones se propaguen
-    @JoinTable(name = "recipe_ingredients", // Tabla intermedia
-            joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+
+    @ManyToMany
+    @JoinTable(
+        name = "recipe_ingredients",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
     private List<Ingredient> ingredients;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-    // Relación Muchos a Uno con User (Creador de la receta)
-    @ManyToOne(cascade = CascadeType.ALL) // El creador puede ser cascado
-    @JoinColumn(name = "user_id") // La columna user_id será la clave foránea
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User userCreator;
 
     private int amountLikes;
@@ -57,7 +60,6 @@ public class Recipe {
     @Column(name = "photo_url")
     private List<String> photos;
 
-    // Default constructor for JPA
     public Recipe() {
     }
 

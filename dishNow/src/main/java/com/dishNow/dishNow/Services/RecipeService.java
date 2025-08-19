@@ -10,7 +10,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
@@ -26,8 +25,6 @@ import com.dishNow.dishNow.Repositories.RecipeRepository;
 @Service
 public class RecipeService {
     @Autowired
-    private CloudinaryService cloudinaryService;
-    @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
     private CategoryService categoryService;
@@ -35,28 +32,6 @@ public class RecipeService {
     private IngredrientService ingredientService;
     @Autowired
     private UserService userService;
-
-    public RecipeGetDTO add(RecipeAddDTO recipeAddDTO, List<MultipartFile> photosFiles) {
-        if(photosFiles.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "At least one photo is required");
-        }
-
-        List<String> photos = new ArrayList<>();
-        for (MultipartFile file : photosFiles) {
-            if (file.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo file is empty");
-            }
-            try {
-                photos.add(cloudinaryService.uploadFile(file, "recipes_portraits"));
-            } catch (Exception e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error uploading photo: " + e.getMessage());
-            }
-        }
-
-        Recipe recipe = createRecipe(recipeAddDTO, photos);
-        recipeRepository.save(recipe);
-        return convertToGetDTO(recipe);
-    }
 
     public RecipeGetDTO update(Long id, RecipeDTO recipeDTO) {
         Recipe recipe = getByID(id);
@@ -108,7 +83,7 @@ public class RecipeService {
             recipe.setPhotos(recipeDTO.getPhotos());
         }
 
-        recipeRepository.save(recipe); // this performs update
+        recipeRepository.save(recipe);
         return convertToGetDTO(recipe);
     }
 
