@@ -1,7 +1,6 @@
 package com.dishNow.dishNow.Services;
 
 import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS.STATUS;
 import com.dishNow.dishNow.Models.Category;
 import com.dishNow.dishNow.Models.Ingredient;
@@ -20,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +43,16 @@ public class CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-        return uploadResult.get("secure_url").toString();
+    public String uploadFile(MultipartFile file) {
+        try{
+            HashMap<Object, Object> options = new HashMap<>();
+            options.put("folder", "recipes");
+            Map uploadedFile = cloudinary.uploader().upload(file.getBytes(), options);
+            String publicId = (String) uploadedFile.get("public_id");
+            return cloudinary.url().secure(true).generate(publicId);
+        }catch (IOException e){
+            return "Claudinary" + e.getMessage();
+        }
     }
 
     public RecipeGetDTO addRecipe(RecipeAddDTO dto, List<MultipartFile> photos) throws IOException{
@@ -55,7 +62,6 @@ public class CloudinaryService {
         User user = userRepository.findById(dto.getUser()).orElse(null);
         
         try {
-            System.out.println("Hello from service");
             for (MultipartFile file : photos) {
                 String url = this.uploadFile(file);
                 photoUrls.add(url);

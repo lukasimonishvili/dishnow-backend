@@ -1,0 +1,23 @@
+USE dishnowdb;
+-- Inserción de 20 recetas
+INSERT INTO `recipe` (`id`, `amount_likes`, `descriptionca`, `descriptionen`, `descriptiones`, `nameca`, `nameen`, `namees`, `status`, `category_id`, `user_id`) VALUES
+(1, 150, 'Sopa cremosa de tomàquet amb un toc de romaní.', 'Creamy tomato soup with a hint of rosemary.', 'Sopa cremosa de tomate con un toque de romero.', 'Sopa de Tomàquet Cremosa', 'Creamy Tomato Soup', 'Sopa Cremosa de Tomate', 1, 1, 1),
+(2, 210, 'Una paella tradicional de marisc amb peix fresc.', 'A traditional seafood paella with fresh fish.', 'Una paella tradicional de marisco con pescado fresco.', 'Paella de Marisc', 'Seafood Paella', 'Paella de Marisco', 1, 2, 2),
+(3, 95, 'Pastís de formatge clàssic amb una base de galetes.', 'Classic cheesecake with a cookie crust.', 'Pastel de queso clásico con una base de galletas.', 'Pastís de Formatge', 'Cheesecake', 'Pastel de Queso', 1, 3, 1),
+(4, 30, 'Limonada refrescant amb menta fresca.', 'Refreshing lemonade with fresh mint.', 'Limonada refrescante con menta fresca.', 'Limonada amb Menta', 'Mint Lemonade', 'Limonada con Menta', 1, 4, 3),
+(5, 75, 'Amanida fresca amb quinoa, verdures i un adreçament de llimona.', 'Fresh salad with quinoa, vegetables, and a lemon dressing.', 'Ensalada fresca con quinoa, verduras y un aderezo de limón.', 'Amanida de Quinoa', 'Quinoa Salad', 'Ensalada de Quinoa', 1, 5, 2),
+(6, 180, 'Sopa de pollastre amb fideus, perfecta per als dies de fred.', 'Chicken noodle soup, perfect for cold days.', 'Sopa de pollo con fideos, perfecta para los días de frío.', 'Sopa de Pollastre amb Fideus', 'Chicken Noodle Soup', 'Sopa de Pollo con Fideos', 1, 1, 1),
+(7, 250, 'Arròs amb pollastre i verdures, molt saborós.', 'Rice with chicken and vegetables, very tasty.', 'Arroz con pollo y verduras, muy sabroso.', 'Arròs amb Pollastre', 'Chicken Rice', 'Arroz con Pollo', 1, 2, 2),
+(8, 110, 'Galetes de civada i panses, ideals per a una tarda dolça.', 'Oatmeal raisin cookies, ideal for a sweet afternoon.', 'Galletas de avena y pasas, ideales para una tarde dulce.', 'Galetes de Civada', 'Oatmeal Cookies', 'Galletas de Avena', 1, 3, 3),
+(9, 65, 'Batut de fruites vermelles i plàtan.', 'Red fruit and banana smoothie.', 'Batido de frutas rojas y plátano.', 'Batut de Fruites Vermelles', 'Red Fruit Smoothie', 'Batido de Frutas Rojas', 1, 4, 1),
+(10, 85, 'Amanida grega amb formatge feta i olives.', 'Greek salad with feta cheese and olives.', 'Ensalada griega con queso feta y aceitunas.', 'Amanida Grega', 'Greek Salad', 'Ensalada Griega', 1, 5, 2),
+(11, 190, 'Crema de carbassa amb gingebre, ideal per a l\'hivern.', 'Pumpkin cream soup with ginger, ideal for winter.', 'Crema de calabaza con jengibre, ideal para el invierno.', 'Crema de Carbassa', 'Pumpkin Cream', 'Crema de Calabaza', 1, 1, 3),
+(12, 230, 'Lasaña de carn amb beixamel casolana.', 'Meat lasagna with homemade bechamel sauce.', 'Lasaña de carne con bechamel casera.', 'Lassanya de Carn', 'Meat Lasagna', 'Lasaña de Carne', 1, 2, 1),
+(13, 160, 'Brownie de xocolata amb nous, humit i deliciós.', 'Chocolate brownie with walnuts, moist and delicious.', 'Brownie de chocolate con nueces, húmedo y delicioso.', 'Brownie de Xocolata', 'Chocolate Brownie', 'Brownie de Chocolate', 1, 3, 2),
+(14, 45, 'Suc de taronja natural i fresc.', 'Natural and fresh orange juice.', 'Zumo de naranja natural y fresco.', 'Suc de Taronja', 'Orange Juice', 'Zumo de Naranja', 1, 4, 3),
+(15, 105, 'Amanida cèsar clàssica amb pollastre a la graella.', 'Classic Caesar salad with grilled chicken.', 'Ensalada César clásica con pollo a la parrilla.', 'Amanida Cèsar', 'Caesar Salad', 'Ensalada César', 1, 5, 1),
+(16, 205, 'Sopa de fideus de ramen amb ou i porc.', 'Ramen noodle soup with egg and pork.', 'Sopa de fideos de ramen con huevo y cerdo.', 'Sopa de Ramen', 'Ramen Soup', 'Sopa de Ramen', 1, 1, 2),
+(17, 275, 'Salmó al forn amb llimona i anet.', 'Baked salmon with lemon and dill.', 'Salmón al horno con limón y eneldo.', 'Salmó al Forn', 'Baked Salmon', 'Salmón al Horno', 1, 2, 3),
+(18, 135, 'Trufa de xocolata negra, un postre elegant.', 'Dark chocolate truffle, an elegant dessert.', 'Trufa de chocolate negro, un postre elegante.', 'Trufes de Xocolata', 'Chocolate Truffles', 'Trufas de Chocolate', 1, 3, 1),
+(19, 55, 'Smoothie de plàtan, espinacs i proteïna.', 'Banana, spinach, and protein smoothie.', 'Batido de plátano, espinacas y proteína.', 'Smoothie de Proteïna', 'Protein Smoothie', 'Batido de Proteína', 1, 4, 2),
+(20, 90, 'Amanida de pasta amb pesto i tomàquets cherry.', 'Pasta salad with pesto and cherry tomatoes.', 'Ensalada de pasta con pesto y tomates cherry.', 'Amanida de Pasta amb Pesto', 'Pasta Salad with Pesto', 'Ensalada de Pasta con Pesto', 1, 5, 3);

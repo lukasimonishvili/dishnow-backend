@@ -3,7 +3,6 @@ package com.dishNow.dishNow.Services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +47,8 @@ public class RecipeService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Photo file is empty");
             }
             try {
-                photos.add(cloudinaryService.uploadFile(file));
-            } catch (IOException e) {
+                photos.add(cloudinaryService.uploadFile(file, "recipes_portraits"));
+            } catch (Exception e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error uploading photo: " + e.getMessage());
             }
         }
