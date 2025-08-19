@@ -1,162 +1,39 @@
 package com.dishNow.dishNow.Models;
 
-import jakarta.validation.constraints.*;
 import java.util.List;
 
 import com.dishNow.dishNow.Enums.RECIPE_ENUMS;
 
 public class RecipeGetDTO {
+    public Long id;
+    public String nameEN;
+    public String nameES;
+    public String nameCA;
+    public String descriptionEN;
+    public String descriptionES;
+    public String descriptionCA;
+    public Category category;
+    public List<Ingredient> ingredients;
+    public RECIPE_ENUMS.STATUS status;
+    public List<String> photos;
+    public Long user;
+    public int amountLikes;
 
-    private Long id;
-    @NotBlank(message = "Name (EN) is required")
-    private String nameEN;
-
-    @NotBlank(message = "Name (ES) is required")
-    private String nameES;
-
-    @NotBlank(message = "Name (CN) is required")
-    private String nameCA;
-
-    @NotBlank(message = "Description (EN) is required")
-    private String descriptionEN;
-
-    @NotBlank(message = "Description (ES) is required")
-    private String descriptionES;
-
-    @NotBlank(message = "Description (CN) is required")
-    private String descriptionCA;
-
-    @NotEmpty(message = "Ingredients are required")
-    private List<@NotNull Ingredient> ingredientsID;
-
-    @NotEmpty(message = "Category are required")
-    private Category categoryId;
-
-    @Min(value = 0, message = "Amount of likes cannot be negative")
-    private Integer amountLikes;
-
-    @NotNull(message = "Status is required")
-    private RECIPE_ENUMS.STATUS status;
-
-    private List<@NotBlank String> photos;
     public RecipeGetDTO() {}
-    public RecipeGetDTO(Long id, @NotBlank(message = "Name (EN) is required") String nameEN,
-            @NotBlank(message = "Name (ES) is required") String nameES,
-            @NotBlank(message = "Name (CN) is required") String nameCA,
-            @NotBlank(message = "Description (EN) is required") String descriptionEN,
-            @NotBlank(message = "Description (ES) is required") String descriptionES,
-            @NotBlank(message = "Description (CN) is required") String descriptionCA,
-            @NotEmpty(message = "Ingredients are required") List<@NotNull Ingredient> ingredientsID,
-            @NotEmpty(message = "Category are required") Category categoryId,
-            @Min(value = 0, message = "Amount of likes cannot be negative") Integer amountLikes,
-            RECIPE_ENUMS.STATUS status, List<@NotBlank String> photos) {
-        this.id = id;
-        this.nameEN = nameEN;
-        this.nameES = nameES;
-        this.nameCA = nameCA;
-        this.descriptionEN = descriptionEN;
-        this.descriptionES = descriptionES;
-        this.descriptionCA = descriptionCA;
-        this.ingredientsID = ingredientsID;
-        this.categoryId = categoryId;
-        this.amountLikes = amountLikes;
-        this.status = status;
-        this.photos = photos;
-    }
 
-    public Category getCategoryId() {
-        return categoryId;
-    }
-    public void setCategoryId(Category categoryId) {
-        this.categoryId = categoryId;
-    }
-    public Long getID() {
-        return id;
-    }
-
-    public void setID(Long id) {
-        this.id = id;
-    }
-
-    public String getNameEN() {
-        return nameEN;
-    }
-
-    public void setNameEN(String nameEN) {
-        this.nameEN = nameEN;
-    }
-
-    public String getNameES() {
-        return nameES;
-    }
-
-    public void setNameES(String nameES) {
-        this.nameES = nameES;
-    }
-
-    public String getNameCA() {
-        return nameCA;
-    }
-
-    public void setNameCA(String nameCA) {
-        this.nameCA = nameCA;
-    }
-
-    public String getDescriptionEN() {
-        return descriptionEN;
-    }
-
-    public void setDescriptionEN(String descriptionEN) {
-        this.descriptionEN = descriptionEN;
-    }
-
-    public String getDescriptionES() {
-        return descriptionES;
-    }
-
-    public void setDescriptionES(String descriptionES) {
-        this.descriptionES = descriptionES;
-    }
-
-    public String getDescriptionCA() {
-        return descriptionCA;
-    }
-
-    public void setDescriptionCA(String descriptionCA) {
-        this.descriptionCA = descriptionCA;
-    }
-
-    public List<Ingredient> getIngredientsID() {
-        return ingredientsID;
-    }
-
-    public void setIngredientsID(List<Ingredient> ingredientsID) {
-        this.ingredientsID = ingredientsID;
-    }
-
-
-
-    public Integer getAmountLikes() {
-        return amountLikes;
-    }
-
-    public void setAmountLikes(Integer amountLikes) {
-        this.amountLikes = amountLikes;
-    }
-
-    public RECIPE_ENUMS.STATUS getStatus() {
-        return status;
-    }
-
-    public void setStatus(RECIPE_ENUMS.STATUS status) {
-        this.status = status;
-    }
-
-    public List<String> getPhotos() {
-        return photos;
-    }
-
-    public void setPhotos(List<String> photos) {
-        this.photos = photos;
+    public RecipeGetDTO(Recipe recipe) {
+        this.id = recipe.getId();
+        this.nameEN = recipe.getNameEN();
+        this.nameES = recipe.getNameES();
+        this.nameCA = recipe.getNameCA();
+        this.descriptionEN = recipe.getDescriptionEN();
+        this.descriptionES = recipe.getDescriptionES();
+        this.descriptionCA = recipe.getDescriptionCA();
+        this.category = recipe.getCategory();
+        this.ingredients = recipe.getIngredients();
+        this.status = recipe.getStatus();
+        this.photos = recipe.getPhotos();
+        this.user = recipe.getUserCreator().getId();
+        this.amountLikes = recipe.getAmountLikes();
     }
 }

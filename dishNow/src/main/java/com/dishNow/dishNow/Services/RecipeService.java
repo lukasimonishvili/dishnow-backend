@@ -167,19 +167,7 @@ public class RecipeService {
     }
 
     public RecipeGetDTO convertToGetDTO(Recipe recipe) {
-        return new RecipeGetDTO(
-                recipe.getId(),
-                recipe.getNameEN(),
-                recipe.getNameES(),
-                recipe.getNameCA(),
-                recipe.getDescriptionEN(),
-                recipe.getDescriptionES(),
-                recipe.getDescriptionCA(),
-                recipeRepository.findIngredients(recipe.getId()),
-                recipeRepository.findCategory(recipe.getId()),
-                recipe.getAmountLikes(),
-                recipe.getStatus(),
-                recipe.getPhotos());
+        return new RecipeGetDTO(recipe);
     }
 
     public RecipeGetDTO getByIdDTO(Long id) {

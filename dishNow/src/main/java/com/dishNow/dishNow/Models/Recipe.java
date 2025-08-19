@@ -14,6 +14,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.FetchType;
 
 @Entity
 public class Recipe {
@@ -42,7 +48,13 @@ public class Recipe {
     private User userCreator;
 
     private int amountLikes;
+
+    @Enumerated(EnumType.STRING)
     private RECIPE_ENUMS.STATUS status;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "recipe_photos", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "photo_url")
     private List<String> photos;
 
     // Default constructor for JPA

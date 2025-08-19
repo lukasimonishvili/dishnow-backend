@@ -63,8 +63,6 @@ public class RecipeAddDTO {
         this.user = user;
     }
 
-    
-
 }
 
  

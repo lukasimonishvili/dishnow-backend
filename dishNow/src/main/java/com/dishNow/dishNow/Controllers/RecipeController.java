@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.dishNow.dishNow.Models.Recipe;
 import com.dishNow.dishNow.Models.RecipeAddDTO;
 import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
+import com.dishNow.dishNow.Services.CloudinaryService;
 import com.dishNow.dishNow.Services.RecipeService;
 
 import jakarta.validation.Valid;
@@ -35,11 +37,15 @@ public class RecipeController {
     @Autowired
     private RecipeService recipeService;
 
-    @PostMapping(value="/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addRecipe(@Valid @RequestPart RecipeAddDTO recipeAddDTO, @RequestPart("photos") List<MultipartFile> photos) {
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
+    @PostMapping(consumes = "multipart/form-data", produces = "application/json", value = "/add")
+    public ResponseEntity<?> addRecipe(@RequestPart("recipe") RecipeAddDTO dto,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos) {
         try {
-            RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO, photos);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
+            RecipeGetDTO newRecipe = cloudinaryService.addRecipe(dto, photos);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newRecipe);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 Bad Request
         }
