@@ -1,6 +1,7 @@
 package com.dishNow.dishNow.Controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,12 @@ import com.dishNow.dishNow.Models.RecipeDTO;
 import com.dishNow.dishNow.Models.RecipeGetDTO;
 import com.dishNow.dishNow.Services.RecipeService;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/api/recipe")
@@ -36,9 +42,14 @@ public class RecipeController {
     private RecipeService recipeService;
 
     @PostMapping(value="/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addRecipe(@Valid @RequestPart RecipeAddDTO recipeAddDTO, @RequestPart("photos") List<MultipartFile> photos) {
+    public ResponseEntity<?> addRecipe(
+    @RequestPart("jsonBody") String jsonString,
+    @RequestPart("photos") List<MultipartFile> photos){
         try {
-            RecipeGetDTO createdRecipe = recipeService.add(recipeAddDTO, photos);
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> map = mapper.readValue(jsonString, new TypeReference<Map<String, Object>>() {});
+            RecipeAddDTO body = mapper.convertValue(map, RecipeAddDTO.class);
+            RecipeGetDTO createdRecipe = recipeService.add(body, photos);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRecipe); // 201 Created
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage()); // 400 Bad Request
